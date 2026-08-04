@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RPS - Reporte de Prestación de Servicio</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root{
+    --azul:#1a3a5c;
+    --azul-osc:#0f2740;
+    --rojo:#c0392b;
+    --gris-bg:#f3f4f6;
+    --gris-borde:#d9dde3;
+    --verde:#2e9e5b;
+    --texto:#1f2937;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--gris-bg);
+    color:var(--texto);
+    padding-bottom:100px;
+  }
+  #hoja{
+    max-width:820px;
+    margin:0 auto;
+    background:#fff;
+  }
+  .toolbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--azul-osc);
+    padding:10px 14px;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+  }
+  .toolbar button{
+    background:var(--rojo);
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .toolbar button.secundario{
+    background:#2c4a6e;
+  }
+
+  header.encabezado{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:16px;
+    border-bottom:3px solid var(--azul);
+    flex-wrap:wrap;
+  }
+  .marca{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-placeholder{
+    width:56px;
+    height:56px;
+    border-radius:8px;
+    background:var(--azul);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:11px;
+    text-align:center;
+    line-height:1.1;
+    letter-spacing:.5px;
+  }
+  .marca-texto h1{
+    margin:0;
+    font-size:18px;
+    color:var(--azul-osc);
+  }
+  .marca-texto p{
+    margin:2px 0 0;
+    font-size:11px;
+    color:var(--rojo);
+    font-weight:600;
+    letter-spacing:.4px;
+  }
+  .marca-texto small{
+    display:block;
+    font-size:10px;
+    color:#666;
+    margin-top:2px;
+  }
+  .rps-box{
+    border:1px solid var(--gris-borde);
+    border-radius:8px;
+    overflow:hidden;
+    min-width:230px;
+    flex:1;
+  }
+  .rps-box .rps-titulo{
+    background:var(--azul-osc);
+    color:#fff;
+    font-size:10px;
+    text-align:center;
+    padding:4px;
+    letter-spacing:.5px;
+  }
+  .rps-box .rps-cuerpo{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    padding:8px;
+    font-size:11px;
+  }
+  .rps-box label{
+    display:block;
+    color:#666;
+    font-size:9px;
+    text-transform:uppercase;
+    margin-bottom:2px;
+  }
+
+  section{
+    padding:14px 16px;
+    border-bottom:1px solid var(--gris-borde);
+  }
+  section h2{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    color:var(--azul);
+    margin:0 0 10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  section h2::before{
+    content:"";
+    width:6px;
+    height:6px;
+    background:var(--rojo);
+    border-radius:50%;
+  }
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  @media (max-width:600px){
+    .grid2,.grid3{grid-template-columns:1fr;}
+    .rps-box .rps-cuerpo{grid-template-columns:1fr;}
+  }
+
+  .campo{margin-bottom:10px;}
+  .campo label{
+    display:block;
+    font-size:11px;
+    color:#555;
+    margin-bottom:4px;
+    font-weight:600;
+  }
+  .campo input,
+  .campo select,
+  .campo textarea{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--gris-borde);
+    border-radius:6px;
+    font-size:14px;
+    font-family:inherit;
+    background:#fafbfc;
+  }
+  .campo textarea{resize:vertical;min-height:60px;}
+
+  .timeline{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:space-between;
+  }
+  .timeline .paso{
+    flex:1;
+    min-width:130px;
+    text-align:center;
+  }
+  .timeline .paso .punto{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--azul);
+    margin:0 auto 6px;
+  }
+  .timeline .paso label{
+    font-size:10px;
+    text-transform:uppercase;
+    color:#666;
+    display:block;
+    margin-bottom:4px;
+  }
+  .timeline .paso input{
+    font-size:12px;
+    padding:6px;
+    text-align:center;
+  }
+
+  .foto-grupo{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+    gap:10px;
+  }
+  .foto-slot{
+    border:1.5px dashed var(--gris-borde);
+    border-radius:8px;
+    aspect-ratio:1/1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    background:#fafbfc;
+    text-align:center;
+    padding:4px;
+  }
+  .foto-slot img{
+    width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;
+  }
+  .foto-slot span{
+    font-size:10px;color:#888;
+  }
+  .foto-slot input[type=file]{
+    position:absolute;inset:0;opacity:0;cursor:pointer;
+  }
+  .foto-slot .etiqueta{
+    position:absolute;bottom:0;left:0;right:0;
+    background:rgba(15,39,64,.75);
+    color:#fff;font-size:9px;padding:3px;
+  }
+
+  .inventario{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px 20px;
+  }
+  @media (max-width:600px){.inventario{grid-template-columns:1fr;}}
+  .item-check{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:13px;
+    padding:6px 0;
+    border-bottom:1px dotted var(--gris-borde);
+  }
+  .item-check input[type=checkbox]{
+    width:20px;height:20px;
+    accent-color:var(--verde);
+  }
+
+  .diagrama-wrap{
+    border:1px solid var(--gris-borde);
+    border-radius:8px;
+    background:#fafbfc;
+    padding:10px;
+  }
+  #diagramaAuto{
+    width:100%;
+    height:auto;
+    cursor:crosshair;
+    touch-action:manipulation;
+  }
+  .marca-dano{
+    fill:var(--rojo);
+    stroke:#fff;
+    stroke-width:1.5;
+    cursor:pointer;
+  }
+  .marca-dano-num{
+    font-size:9px;
+    fill:#fff;
+    font-weight:700;
+    text-anchor:middle;
+    pointer-events:none;
+  }
+  .lista-danos{
+    margin:10px 0 0;
+    padding-left:20px;
+    font-size:12px;
+    color:#444;
+  }
+  .lista-danos li{margin-bottom:4px;}
+
+  .declaracion{
+    font-size:11px;
+    color:#555;
+    line-height:1.5;
+    background:#fafbfc;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid var(--gris-borde);
+  }
+
+  footer.pie{
+    padding:14px 16px;
+    text-align:center;
+    font-size:10px;
+    color:#888;
+  }
+  footer.pie strong{color:var(--azul-osc);}
+
+  /* Ajustes para exportación a PDF: ocultar toolbar y controles de archivo vacíos */
+  @media print{
+    .toolbar{display:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <button type="button" class="secundario" onclick="limpiarFormulario()">Limpiar</button>
+    <button type="button" onclick="generarPDF()">Generar PDF</button>
+  </div>
+
+  <div id="hoja">
+
+    <header class="encabezado">
+      <div class="marca">
+        <div class="logo-placeholder">LOGO<br>JOSETOW</div>
+        <div class="marca-texto">
+          <h1 contenteditable="true">JOSETOW</h1>
+          <p contenteditable="true">TRANSPORTE · RESCATE · ASISTENCIA EN RUTA</p>
+          <small contenteditable="true">RUT: 00.000.000-0 · +56 9 0000 0000</small>
+          <small contenteditable="true">Dirección, Comuna, Santiago - Chile</small>
+        </div>
+      </div>
+
+      <div class="rps-box">
+        <div class="rps-titulo">REPORTE DE PRESTACIÓN DE SERVICIO</div>
+        <div class="rps-cuerpo">
+          <div>
+            <label>OT / RPS</label>
+            <input type="text" placeholder="G26-00856">
+          </div>
+          <div>
+            <label>Expediente</label>
+            <input type="text" placeholder="3162605">
+          </div>
+          <div>
+            <label>Fecha servicio</label>
+            <input type="date">
+          </div>
+          <div>
+            <label>Hora cierre</label>
+            <input type="time">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2>Tipo de servicio / Mandante</h2>
+      <div class="grid2">
+        <div class="campo">
+          <label>Tipo de servicio</label>
+          <input type="text" placeholder="Traslado">
+        </div>
+        <div class="campo">
+          <label>Mandante</label>
+          <input type="text" placeholder="Reale Chile Seguros Generales S.A.">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Cliente (compañía)</h2>
+      <div class="grid3">
+        <div class="campo"><label>Nombre</label><input type="text"></div>
+        <div class="campo"><label>RUT</label><input type="text"></div>
+        <div class="campo"><label>Teléfono</label><input type="tel"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Vehículo</h2>
+      <div class="grid3">
+        <div class="campo"><label>Patente</label><input type="text"></div>
+        <div class="campo"><label>Marca</label><input type="text"></div>
+        <div class="campo"><label>Modelo</label><input type="text"></div>
+        <div class="campo"><label>Color</label><input type="text"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Ruta del servicio</h2>
+      <div class="campo"><label>Desde</label><input type="text"></div>
+      <div class="campo"><label>Hasta</label><input type="text"></div>
+    </section>
+
+    <section>
+      <h2>Unidad / Operador</h2>
+      <div class="grid2">
+        <div class="campo"><label>Unidad</label><input type="text"></div>
+        <div class="campo"><label>Marca / Modelo unidad</label><input type="text"></div>
+        <div class="campo"><label>Operador</label><input type="text"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Timeline del servicio</h2>
+      <div class="timeline">
+        <div class="paso">
+          <div class="punto"></div>
+          <label>Asignado</label>
+          <input type="datetime-local">
+        </div>
+        <div class="paso">
+          <div class="punto"></div>
+          <label>Iniciado</label>
+          <input type="datetime-local">
+        </div>
+        <div class="paso">
+          <div class="punto"></div>
+          <label>Ubicado</label>
+          <input type="datetime-local">
+        </div>
+        <div class="paso">
+          <div class="punto"></div>
+          <label>Trasladado</label>
+          <input type="datetime-local">
+        </div>
+        <div class="paso">
+          <div class="punto"></div>
+          <label>Entregado</label>
+          <input type="datetime-local">
+        </div>
+      </div>
+      <div class="campo" style="margin-top:12px;">
+        <label>Adicionales</label>
+        <input type="text" placeholder="Ej: ad-urr-3">
+      </div>
+    </section>
+
+    <section>
+      <h2>Evidencia en origen</h2>
+      <div class="foto-grupo">
+        <div class="foto-slot"><span>+ Frente</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FRENTE</div></div>
+        <div class="foto-slot"><span>+ Trasera</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">TRASERA</div></div>
+        <div class="foto-slot"><span>+ Lat. izq.</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. IZQ</div></div>
+        <div class="foto-slot"><span>+ Lat. der.</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. DER</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Evidencia en destino</h2>
+      <div class="foto-grupo">
+        <div class="foto-slot"><span>+ Foto 1</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 1</div></div>
+        <div class="foto-slot"><span>+ Foto 2</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 2</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Inventario accesorios</h2>
+      <div class="inventario">
+        <label class="item-check">Ruedas completas <input type="checkbox"></label>
+        <label class="item-check">Radio <input type="checkbox"></label>
+        <label class="item-check">TAG <input type="checkbox"></label>
+        <label class="item-check">Llave <input type="checkbox"></label>
+        <label class="item-check">Documentos <input type="checkbox"></label>
+        <label class="item-check">Triángulos <input type="checkbox"></label>
+        <label class="item-check">Gata <input type="checkbox"></label>
+        <label class="item-check">Llave ruedas <input type="checkbox"></label>
+        <label class="item-check">Extintor <input type="checkbox"></label>
+        <label class="item-check">Chaleco <input type="checkbox"></label>
+        <label class="item-check">Pantalla <input type="checkbox"></label>
+        <label class="item-check">Neumático repuesto <input type="checkbox"></label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Observaciones</h2>
+      <div class="campo">
+        <label>Observación base</label>
+        <textarea placeholder="Estado de ruedas, transmisión, solicitud del cliente, fallas..."></textarea>
+      </div>
+      <div class="campo">
+        <label>Observación del operador</label>
+        <textarea placeholder="Sin novedad."></textarea>
+      </div>
+    </section>
+
+    <section>
+      <h2>Daños visibles</h2>
+      <p style="font-size:11px;color:#777;margin:0 0 10px;">Toca cualquier punto del vehículo para marcar un daño. Doble clic sobre una marca para eliminarla.</p>
+
+      <div class="diagrama-wrap">
+        <svg id="diagramaAuto" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Carrocería vista superior -->
+          <rect x="60" y="40" width="280" height="140" rx="28" fill="none" stroke="#1a3a5c" stroke-width="2"/>
+          <!-- Parabrisas / techo -->
+          <rect x="140" y="55" width="120" height="110" rx="14" fill="none" stroke="#1a3a5c" stroke-width="1.4"/>
+          <line x1="200" y1="55" x2="200" y2="165" stroke="#1a3a5c" stroke-width="1"/>
+          <!-- Capó y maletero -->
+          <line x1="60" y1="40" x2="140" y2="60" stroke="#1a3a5c" stroke-width="1"/>
+          <line x1="60" y1="180" x2="140" y2="160" stroke="#1a3a5c" stroke-width="1"/>
+          <line x1="340" y1="40" x2="260" y2="60" stroke="#1a3a5c" stroke-width="1"/>
+          <line x1="340" y1="180" x2="260" y2="160" stroke="#1a3a5c" stroke-width="1"/>
+          <!-- Ruedas -->
+          <rect x="95" y="24" width="34" height="14" rx="4" fill="#1a3a5c"/>
+          <rect x="95" y="182" width="34" height="14" rx="4" fill="#1a3a5c"/>
+          <rect x="271" y="24" width="34" height="14" rx="4" fill="#1a3a5c"/>
+          <rect x="271" y="182" width="34" height="14" rx="4" fill="#1a3a5c"/>
+          <!-- Espejos -->
+          <rect x="128" y="66" width="10" height="6" fill="#1a3a5c"/>
+          <rect x="128" y="148" width="10" height="6" fill="#1a3a5c"/>
+          <!-- Etiquetas de orientación -->
+          <text x="345" y="115" font-size="11" fill="#888" text-anchor="start">FRENTE</text>
+          <text x="55" y="115" font-size="11" fill="#888" text-anchor="end">ATRÁS</text>
+          <text x="200" y="30" font-size="10" fill="#888" text-anchor="middle">IZQUIERDO</text>
+          <text x="200" y="198" font-size="10" fill="#888" text-anchor="middle">DERECHO</text>
+        </svg>
+      </div>
+
+      <ol id="listaDanos" class="lista-danos"></ol>
+
+      <div class="campo">
+        <label>Observaciones adicionales de daños</label>
+        <textarea placeholder="Ej: Rayón profundo, requiere pulido"></textarea>
+      </div>
+    </section>
+
+    <section>
+      <h2>Entrega del vehículo (origen)</h2>
+      <div class="grid2">
+        <div class="campo"><label>Nombre</label><input type="text"></div>
+        <div class="campo"><label>RUT</label><input type="text"></div>
+        <div class="campo"><label>Teléfono</label><input type="tel"></div>
+        <div class="campo"><label>Fecha / Hora</label><input type="datetime-local"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Recepción del vehículo (destino)</h2>
+      <div class="grid2">
+        <div class="campo"><label>Nombre</label><input type="text"></div>
+        <div class="campo"><label>RUT</label><input type="text"></div>
+        <div class="campo"><label>Teléfono</label><input type="tel"></div>
+        <div class="campo"><label>Fecha / Hora</label><input type="datetime-local"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Declaración</h2>
+      <p class="declaracion" contenteditable="true">
+        El presente documento deja constancia de la prestación del servicio de transporte del vehículo indicado,
+        en las condiciones descritas. Los datos fueron proporcionados por las partes y registrados en forma
+        digital al momento de la entrega. La empresa no se responsabiliza por especies personales no declaradas
+        en este registro.
+      </p>
+    </section>
+
+    <footer class="pie">
+      <strong>JOSETOW</strong> · Asistencia en ruta · Documento generado digitalmente
+    </footer>
+
+  </div>
+
+<script>
+function mostrarFoto(input){
+  if(!input.files || !input.files[0]) return;
+  const slot = input.parentElement;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    let img = slot.querySelector('img');
+    if(!img){
+      img = document.createElement('img');
+      slot.insertBefore(img, slot.firstChild);
+    }
+    img.src = e.target.result;
+    const span = slot.querySelector('span');
+    if(span) span.style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+let contadorDanos = 0;
+const danos = [];
+
+function inicializarDiagrama(){
+  const svg = document.getElementById('diagramaAuto');
+  const lista = document.getElementById('listaDanos');
+
+  svg.addEventListener('click', function(ev){
+    if(ev.target.closest('.marca-dano-grupo')) return;
+
+    const pt = svg.createSVGPoint();
+    pt.x = ev.clientX;
+    pt.y = ev.clientY;
+    const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
+
+    const tipo = prompt('Describe el daño (ej: Rayón, Abolladura, Rotura):');
+    if(!tipo) return;
+
+    contadorDanos++;
+    const idDano = contadorDanos;
+
+    const grupo = document.createElementNS('http://www.w3.org/2000/svg','g');
+    grupo.setAttribute('class','marca-dano-grupo');
+    grupo.setAttribute('data-id', idDano);
+
+    const circulo = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circulo.setAttribute('cx', cursor.x);
+    circulo.setAttribute('cy', cursor.y);
+    circulo.setAttribute('r', 9);
+    circulo.setAttribute('class','marca-dano');
+
+    const texto = document.createElementNS('http://www.w3.org/2000/svg','text');
+    texto.setAttribute('x', cursor.x);
+    texto.setAttribute('y', cursor.y + 3);
+    texto.setAttribute('class','marca-dano-num');
+    texto.textContent = idDano;
+
+    grupo.appendChild(circulo);
+    grupo.appendChild(texto);
+    svg.appendChild(grupo);
+
+    grupo.addEventListener('dblclick', function(e){
+      e.stopPropagation();
+      grupo.remove();
+      const item = lista.querySelector('li[data-id="'+idDano+'"]');
+      if(item) item.remove();
+    });
+
+    const item = document.createElement('li');
+    item.setAttribute('data-id', idDano);
+    item.textContent = idDano + '. ' + tipo;
+    lista.appendChild(item);
+  });
+}
+
+function limpiarFormulario(){
+  if(!confirm('¿Borrar todos los datos del formulario?')) return;
+  document.querySelectorAll('#hoja input').forEach(el=>{
+    if(el.type === 'checkbox') el.checked = false;
+    else if(el.type !== 'file') el.value = '';
+  });
+  document.querySelectorAll('#hoja textarea').forEach(el=> el.value = '');
+  document.querySelectorAll('.foto-slot img').forEach(img=> img.remove());
+  document.querySelectorAll('.foto-slot span').forEach(s=> s.style.display = 'block');
+  document.querySelectorAll('.foto-slot input[type=file]').forEach(f=> f.value = '');
+  document.querySelectorAll('.marca-dano-grupo').forEach(g=> g.remove());
+  document.getElementById('listaDanos').innerHTML = '';
+  contadorDanos = 0;
+}
+
+inicializarDiagrama();
+
+function generarPDF(){
+  const boton = event.target;
+  const original = boton.textContent;
+  boton.textContent = 'Generando...';
+  boton.disabled = true;
+
+  // Convertir inputs a texto visible para que el PDF los capture bien
+  const hoja = document.getElementById('hoja');
+  const inputs = hoja.querySelectorAll('input:not([type=file]):not([type=checkbox]), textarea');
+  const reemplazos = [];
+
+  inputs.forEach(el=>{
+    const span = document.createElement('span');
+    span.textContent = el.value || '';
+    span.style.display = 'block';
+    span.style.minHeight = '18px';
+    span.style.padding = '9px 10px';
+    span.style.fontSize = '14px';
+    span.style.borderBottom = '1px solid #d9dde3';
+    el.style.display = 'none';
+    el.parentNode.insertBefore(span, el);
+    reemplazos.push({el, span});
+  });
+
+  const opciones = {
+    margin: 0,
+    filename: 'RPS_' + (document.querySelector('.rps-cuerpo input').value || 'reporte') + '.pdf',
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf().set(opciones).from(hoja).save().then(()=>{
+    reemplazos.forEach(r=>{ r.span.remove(); r.el.style.display = ''; });
+    boton.textContent = original;
+    boton.disabled = false;
+  }).catch(()=>{
+    reemplazos.forEach(r=>{ r.span.remove(); r.el.style.display = ''; });
+    boton.textContent = original;
+    boton.disabled = false;
+    alert('Hubo un problema generando el PDF, intenta de nuevo.');
+  });
+}
+</script>
+
+</body>
+</html>

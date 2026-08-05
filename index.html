@@ -37,28 +37,41 @@
   #hoja.compact-mode header.encabezado{
     padding:10px;
   }
-  #hoja.compact-mode .marca-texto h1{font-size:16px;}
-  #hoja.compact-mode .marca-texto p{font-size:9px;}
-  #hoja.compact-mode .marca-texto small{font-size:8px;}
-  #hoja.compact-mode .rps-box .rps-cuerpo{gap:4px;}
-  #hoja.compact-mode section{padding:10px 10px;}
-  #hoja.compact-mode .campo label{font-size:9px;}
+  #hoja.compact-mode .marca-texto h1{font-size:15px;}
+  #hoja.compact-mode .marca-texto p{font-size:8px;}
+  #hoja.compact-mode .marca-texto small{font-size:7px;}
+  #hoja.compact-mode .rps-box .rps-cuerpo{gap:3px;}
+  #hoja.compact-mode section{padding:8px 8px;}
+  #hoja.compact-mode .campo label{font-size:8px;}
   #hoja.compact-mode .campo input,
   #hoja.compact-mode .campo select,
-  #hoja.compact-mode .campo textarea{padding:6px 8px; font-size:12px;}
-  #hoja.compact-mode .grid2{grid-template-columns:1fr 1fr; gap:8px;}
-  #hoja.compact-mode .grid3{grid-template-columns:1fr 1fr 1fr; gap:8px;}
-  #hoja.compact-mode .timeline{gap:6px;}
-  #hoja.compact-mode .timeline .paso{min-width:auto; padding:6px;}
-  #hoja.compact-mode .foto-grupo{gap:6px;}
-  #hoja.compact-mode .foto-slot{aspect-ratio:1.4/1; padding:6px;}
-  #hoja.compact-mode .foto-slot span{font-size:9px;}
-  #hoja.compact-mode .foto-slot .etiqueta{font-size:8px; padding:2px 4px;}
-  #hoja.compact-mode .inventario{gap:6px 12px;}
-  #hoja.compact-mode .item-check{font-size:11px; padding:4px 0;}
-  #hoja.compact-mode .declaracion{font-size:10px; padding:8px;}
-  #hoja.compact-mode footer.pie{padding:10px; font-size:9px;}
-  #hoja.compact-mode #diagramaAuto{height:140px;}
+  #hoja.compact-mode .campo textarea{padding:5px 6px; font-size:11px;}
+  #hoja.compact-mode .grid2{grid-template-columns:1fr 1fr; gap:6px;}
+  #hoja.compact-mode .grid3{grid-template-columns:1fr 1fr 1fr; gap:6px;}
+  #hoja.compact-mode .timeline{gap:4px;}
+  #hoja.compact-mode .timeline .paso{min-width:auto; padding:4px;}
+  #hoja.compact-mode .timeline .paso label{font-size:8px;}
+  #hoja.compact-mode .timeline .paso input{font-size:10px; padding:4px;}
+  #hoja.compact-mode .foto-grupo{gap:4px;}
+  #hoja.compact-mode .foto-slot{width:80px; height:80px; min-height:80px; padding:4px;}
+  #hoja.compact-mode .foto-slot span{font-size:8px;}
+  #hoja.compact-mode .foto-slot .etiqueta{font-size:7px; padding:2px 3px;}
+  #hoja.compact-mode .inventario{gap:4px 8px;}
+  #hoja.compact-mode .item-check{font-size:10px; padding:3px 0;}
+  #hoja.compact-mode .item-check input[type=checkbox]{width:16px; height:16px;}
+  #hoja.compact-mode .declaracion{font-size:9px; padding:6px;}
+  #hoja.compact-mode footer.pie{padding:8px; font-size:8px;}
+  #hoja.compact-mode #diagramaAuto{height:110px;}
+  #hoja.compact-mode .toolbar{display:none;}
+  #hoja.compact-mode header.encabezado{display:grid; grid-template-columns:1.6fr 1.4fr; gap:8px;}
+  #hoja.compact-mode .marca{gap:6px;}
+  #hoja.compact-mode .marca-texto{gap:4px;}
+  #hoja.compact-mode .logo-placeholder{width:48px; height:48px; font-size:10px;}
+  #hoja.compact-mode .rps-box{min-width:auto;}
+  #hoja.compact-mode .rps-box .rps-titulo{font-size:9px; padding:3px;}
+  #hoja.compact-mode .rps-box .rps-cuerpo{font-size:10px;}
+  #hoja.compact-mode .rps-box .rps-cuerpo label{font-size:7px;}
+  #hoja.compact-mode .field-row{display:grid; grid-template-columns:1fr 1fr; gap:6px;}
 
   .toolbar{
     position:sticky;
@@ -353,13 +366,26 @@
     .foto-slot{page-break-inside:avoid;}
     .timeline{page-break-inside:avoid;}
   }
+  /* Estilos de la vista de reporte */
+  #vistaReporte{display:flex;justify-content:center;align-items:flex-start;background:transparent}
+  #reporteFinal{color:var(--texto);box-sizing:border-box}
+  #reporteFinal .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+  #reporteFinal .card{background:#fff;border:1px solid var(--gris-borde);border-radius:8px;padding:8px}
+  #reporteFinal .muted{color:#666;font-size:11px}
+  #reporteFinal img.thumb{width:100%;height:70px;object-fit:cover;border-radius:6px}
+  @media (max-width:700px){
+    #reporteFinal{transform:scale(.72);transform-origin:top center}
+  }
 </style>
 </head>
 <body>
 
   <div class="toolbar">
     <button type="button" class="secundario" onclick="limpiarFormulario()">Limpiar</button>
-    <button type="button" onclick="generarPDF(event, false)">Generar PDF</button>
+    <button type="button" id="btnFormulario">Formulario</button>
+    <button type="button" id="btnVistaPrevia">Vista previa</button>
+    <button type="button" id="btnGenerarPDF">Generar PDF</button>
+    <button type="button" onclick="generarPDF(event, false)">Generar PDF (legacy)</button>
     <button type="button" onclick="generarPDF(event, true)">Generar PDF compacto</button>
   </div>
 
@@ -380,20 +406,20 @@
         <div class="rps-titulo">REPORTE DE PRESTACIÓN DE SERVICIO</div>
         <div class="rps-cuerpo">
           <div>
-            <label>OT / RPS</label>
-            <input type="text" placeholder="G26-00856">
+            <label for="rps_ot">OT / RPS</label>
+            <input id="rps_ot" type="text" placeholder="G26-00856">
           </div>
           <div>
-            <label>Expediente</label>
-            <input type="text" placeholder="3162605">
+            <label for="rps_expediente">Expediente</label>
+            <input id="rps_expediente" type="text" placeholder="3162605">
           </div>
           <div>
-            <label>Fecha servicio</label>
-            <input type="date">
+            <label for="rps_fecha">Fecha servicio</label>
+            <input id="rps_fecha" type="date">
           </div>
           <div>
-            <label>Hora cierre</label>
-            <input type="time">
+            <label for="rps_hora">Hora cierre</label>
+            <input id="rps_hora" type="time">
           </div>
         </div>
       </div>
@@ -403,12 +429,12 @@
       <h2>Tipo de servicio / Mandante</h2>
       <div class="grid2">
         <div class="campo">
-          <label>Tipo de servicio</label>
-          <input type="text" placeholder="Traslado">
+          <label for="tipo_servicio">Tipo de servicio</label>
+          <input id="tipo_servicio" type="text" placeholder="Traslado">
         </div>
         <div class="campo">
-          <label>Mandante</label>
-          <input type="text" placeholder="Reale Chile Seguros Generales S.A.">
+          <label for="mandante">Mandante</label>
+          <input id="mandante" type="text" placeholder="Reale Chile Seguros Generales S.A.">
         </div>
       </div>
     </section>
@@ -416,34 +442,34 @@
     <section>
       <h2>Cliente (compañía)</h2>
       <div class="grid3">
-        <div class="campo"><label>Nombre</label><input type="text"></div>
-        <div class="campo"><label>RUT</label><input type="text"></div>
-        <div class="campo"><label>Teléfono</label><input type="tel"></div>
+        <div class="campo"><label for="cliente_nombre">Nombre</label><input id="cliente_nombre" type="text"></div>
+        <div class="campo"><label for="cliente_rut">RUT</label><input id="cliente_rut" type="text"></div>
+        <div class="campo"><label for="cliente_tel">Teléfono</label><input id="cliente_tel" type="tel"></div>
       </div>
     </section>
 
     <section>
       <h2>Vehículo</h2>
       <div class="grid3">
-        <div class="campo"><label>Patente</label><input type="text"></div>
-        <div class="campo"><label>Marca</label><input type="text"></div>
-        <div class="campo"><label>Modelo</label><input type="text"></div>
-        <div class="campo"><label>Color</label><input type="text"></div>
+        <div class="campo"><label for="veh_patente">Patente</label><input id="veh_patente" type="text"></div>
+        <div class="campo"><label for="veh_marca">Marca</label><input id="veh_marca" type="text"></div>
+        <div class="campo"><label for="veh_modelo">Modelo</label><input id="veh_modelo" type="text"></div>
+        <div class="campo"><label for="veh_color">Color</label><input id="veh_color" type="text"></div>
       </div>
     </section>
 
     <section>
       <h2>Ruta del servicio</h2>
-      <div class="campo"><label>Desde</label><input type="text"></div>
-      <div class="campo"><label>Hasta</label><input type="text"></div>
+      <div class="campo"><label for="ruta_desde">Desde</label><input id="ruta_desde" type="text"></div>
+      <div class="campo"><label for="ruta_hasta">Hasta</label><input id="ruta_hasta" type="text"></div>
     </section>
 
     <section>
       <h2>Unidad / Operador</h2>
       <div class="grid2">
-        <div class="campo"><label>Unidad</label><input type="text"></div>
-        <div class="campo"><label>Marca / Modelo unidad</label><input type="text"></div>
-        <div class="campo"><label>Operador</label><input type="text"></div>
+        <div class="campo"><label for="unidad_unidad">Unidad</label><input id="unidad_unidad" type="text"></div>
+        <div class="campo"><label for="unidad_marca_modelo">Marca / Modelo unidad</label><input id="unidad_marca_modelo" type="text"></div>
+        <div class="campo"><label for="operador_nombre">Operador</label><input id="operador_nombre" type="text"></div>
       </div>
     </section>
 
@@ -452,81 +478,81 @@
       <div class="timeline">
         <div class="paso">
           <div class="punto"></div>
-          <label>Asignado</label>
-          <input type="datetime-local">
+          <label for="timeline_asignado">Asignado</label>
+          <input id="timeline_asignado" type="datetime-local">
         </div>
         <div class="paso">
           <div class="punto"></div>
-          <label>Iniciado</label>
-          <input type="datetime-local">
+          <label for="timeline_iniciado">Iniciado</label>
+          <input id="timeline_iniciado" type="datetime-local">
         </div>
         <div class="paso">
           <div class="punto"></div>
-          <label>Ubicado</label>
-          <input type="datetime-local">
+          <label for="timeline_ubicado">Ubicado</label>
+          <input id="timeline_ubicado" type="datetime-local">
         </div>
         <div class="paso">
           <div class="punto"></div>
-          <label>Trasladado</label>
-          <input type="datetime-local">
+          <label for="timeline_trasladado">Trasladado</label>
+          <input id="timeline_trasladado" type="datetime-local">
         </div>
         <div class="paso">
           <div class="punto"></div>
-          <label>Entregado</label>
-          <input type="datetime-local">
+          <label for="timeline_entregado">Entregado</label>
+          <input id="timeline_entregado" type="datetime-local">
         </div>
       </div>
       <div class="campo" style="margin-top:12px;">
-        <label>Adicionales</label>
-        <input type="text" placeholder="Ej: ad-urr-3">
+        <label for="adicionales">Adicionales</label>
+        <input id="adicionales" type="text" placeholder="Ej: ad-urr-3">
       </div>
     </section>
 
     <section>
       <h2>Evidencia en origen</h2>
       <div class="foto-grupo">
-        <div class="foto-slot"><span>+ Frente</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FRENTE</div></div>
-        <div class="foto-slot"><span>+ Trasera</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">TRASERA</div></div>
-        <div class="foto-slot"><span>+ Lat. izq.</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. IZQ</div></div>
-        <div class="foto-slot"><span>+ Lat. der.</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. DER</div></div>
+        <div class="foto-slot"><span>+ Frente</span><input id="foto_origen_frente" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FRENTE</div></div>
+        <div class="foto-slot"><span>+ Trasera</span><input id="foto_origen_trasera" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">TRASERA</div></div>
+        <div class="foto-slot"><span>+ Lat. izq.</span><input id="foto_origen_lat_izq" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. IZQ</div></div>
+        <div class="foto-slot"><span>+ Lat. der.</span><input id="foto_origen_lat_der" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. DER</div></div>
       </div>
     </section>
 
     <section>
       <h2>Evidencia en destino</h2>
       <div class="foto-grupo">
-        <div class="foto-slot"><span>+ Foto 1</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 1</div></div>
-        <div class="foto-slot"><span>+ Foto 2</span><input type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 2</div></div>
+        <div class="foto-slot"><span>+ Foto 1</span><input id="foto_destino_1" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 1</div></div>
+        <div class="foto-slot"><span>+ Foto 2</span><input id="foto_destino_2" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 2</div></div>
       </div>
     </section>
 
     <section>
       <h2>Inventario accesorios</h2>
       <div class="inventario">
-        <label class="item-check">Ruedas completas <input type="checkbox"></label>
-        <label class="item-check">Radio <input type="checkbox"></label>
-        <label class="item-check">TAG <input type="checkbox"></label>
-        <label class="item-check">Llave <input type="checkbox"></label>
-        <label class="item-check">Documentos <input type="checkbox"></label>
-        <label class="item-check">Triángulos <input type="checkbox"></label>
-        <label class="item-check">Gata <input type="checkbox"></label>
-        <label class="item-check">Llave ruedas <input type="checkbox"></label>
-        <label class="item-check">Extintor <input type="checkbox"></label>
-        <label class="item-check">Chaleco <input type="checkbox"></label>
-        <label class="item-check">Pantalla <input type="checkbox"></label>
-        <label class="item-check">Neumático repuesto <input type="checkbox"></label>
+        <label class="item-check">Ruedas completas <input id="inv_ruedas" type="checkbox"></label>
+        <label class="item-check">Radio <input id="inv_radio" type="checkbox"></label>
+        <label class="item-check">TAG <input id="inv_tag" type="checkbox"></label>
+        <label class="item-check">Llave <input id="inv_llave" type="checkbox"></label>
+        <label class="item-check">Documentos <input id="inv_documentos" type="checkbox"></label>
+        <label class="item-check">Triángulos <input id="inv_triangulos" type="checkbox"></label>
+        <label class="item-check">Gata <input id="inv_gata" type="checkbox"></label>
+        <label class="item-check">Llave ruedas <input id="inv_llave_ruedas" type="checkbox"></label>
+        <label class="item-check">Extintor <input id="inv_extintor" type="checkbox"></label>
+        <label class="item-check">Chaleco <input id="inv_chaleco" type="checkbox"></label>
+        <label class="item-check">Pantalla <input id="inv_pantalla" type="checkbox"></label>
+        <label class="item-check">Neumático repuesto <input id="inv_neumatico" type="checkbox"></label>
       </div>
     </section>
 
     <section>
       <h2>Observaciones</h2>
       <div class="campo">
-        <label>Observación base</label>
-        <textarea placeholder="Estado de ruedas, transmisión, solicitud del cliente, fallas..."></textarea>
+        <label for="obs_base">Observación base</label>
+        <textarea id="obs_base" placeholder="Estado de ruedas, transmisión, solicitud del cliente, fallas..."></textarea>
       </div>
       <div class="campo">
-        <label>Observación del operador</label>
-        <textarea placeholder="Sin novedad."></textarea>
+        <label for="obs_operador">Observación del operador</label>
+        <textarea id="obs_operador" placeholder="Sin novedad."></textarea>
       </div>
     </section>
 
@@ -565,34 +591,34 @@
       <ol id="listaDanos" class="lista-danos"></ol>
 
       <div class="campo">
-        <label>Observaciones adicionales de daños</label>
-        <textarea placeholder="Ej: Rayón profundo, requiere pulido"></textarea>
+        <label for="obs_danos">Observaciones adicionales de daños</label>
+        <textarea id="obs_danos" placeholder="Ej: Rayón profundo, requiere pulido"></textarea>
       </div>
     </section>
 
     <section>
       <h2>Entrega del vehículo (origen)</h2>
       <div class="grid2">
-        <div class="campo"><label>Nombre</label><input type="text"></div>
-        <div class="campo"><label>RUT</label><input type="text"></div>
-        <div class="campo"><label>Teléfono</label><input type="tel"></div>
-        <div class="campo"><label>Fecha / Hora</label><input type="datetime-local"></div>
+        <div class="campo"><label for="entrega_origen_nombre">Nombre</label><input id="entrega_origen_nombre" type="text"></div>
+        <div class="campo"><label for="entrega_origen_rut">RUT</label><input id="entrega_origen_rut" type="text"></div>
+        <div class="campo"><label for="entrega_origen_tel">Teléfono</label><input id="entrega_origen_tel" type="tel"></div>
+        <div class="campo"><label for="entrega_origen_fecha">Fecha / Hora</label><input id="entrega_origen_fecha" type="datetime-local"></div>
       </div>
     </section>
 
     <section>
       <h2>Recepción del vehículo (destino)</h2>
       <div class="grid2">
-        <div class="campo"><label>Nombre</label><input type="text"></div>
-        <div class="campo"><label>RUT</label><input type="text"></div>
-        <div class="campo"><label>Teléfono</label><input type="tel"></div>
-        <div class="campo"><label>Fecha / Hora</label><input type="datetime-local"></div>
+        <div class="campo"><label for="recep_nombre">Nombre</label><input id="recep_nombre" type="text"></div>
+        <div class="campo"><label for="recep_rut">RUT</label><input id="recep_rut" type="text"></div>
+        <div class="campo"><label for="recep_tel">Teléfono</label><input id="recep_tel" type="tel"></div>
+        <div class="campo"><label for="recep_fecha">Fecha / Hora</label><input id="recep_fecha" type="datetime-local"></div>
       </div>
     </section>
 
     <section>
       <h2>Declaración</h2>
-      <p class="declaracion" contenteditable="true">
+      <p id="declaracion_text" class="declaracion" contenteditable="true">
         El presente documento deja constancia de la prestación del servicio de transporte del vehículo indicado,
         en las condiciones descritas. Los datos fueron proporcionados por las partes y registrados en forma
         digital al momento de la entrega. La empresa no se responsabiliza por especies personales no declaradas
@@ -604,6 +630,13 @@
       <strong>JOSETOW</strong> · Asistencia en ruta · Documento generado digitalmente
     </footer>
 
+  </div>
+  
+  <!-- Vista de reporte final (separada) -->
+  <div id="vistaReporte" style="display:none;padding:18px;">
+    <div id="reporteFinal" style="width:297mm;min-height:210mm;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:12mm;font-family:inherit;border-radius:6px;">
+      <!-- contenido generado dinámicamente -->
+    </div>
   </div>
 
 <script>
@@ -711,9 +744,9 @@ function generarPDF(event, compacto = false){
     const span = document.createElement('span');
     span.textContent = el.value || '';
     span.style.display = 'block';
-    span.style.minHeight = '18px';
-    span.style.padding = '9px 10px';
-    span.style.fontSize = '14px';
+    span.style.minHeight = '16px';
+    span.style.padding = compacto ? '5px 6px' : '9px 10px';
+    span.style.fontSize = compacto ? '11px' : '14px';
     span.style.borderBottom = '1px solid #d9dde3';
     el.style.display = 'none';
     el.parentNode.insertBefore(span, el);
@@ -744,6 +777,184 @@ function generarPDF(event, compacto = false){
     alert('Hubo un problema generando el PDF, intenta de nuevo.');
   });
 }
+
+// --- Funciones para la vista de reporte final ---
+function obtenerDatosReporte(){
+  const pick = id => { const el = document.getElementById(id); if(!el) return '—'; const val = el.value; return (val===undefined || val===null || val==='') ? '—' : val };
+  const formatFecha = (d) => { if(!d || d==='—') return '—'; const dt = new Date(d); if(isNaN(dt)) return '—'; const dd = String(dt.getDate()).padStart(2,'0'); const mm = String(dt.getMonth()+1).padStart(2,'0'); const yyyy = dt.getFullYear(); return dd + '-' + mm + '-' + yyyy };
+  const formatHora = (d) => { if(!d || d==='—') return '—'; const dt = new Date(d); if(isNaN(dt)) return '—'; return String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0') };
+
+  const fotos = (ids) => ids.map(id=>{
+    const input = document.getElementById(id);
+    if(!input) return null;
+    const slot = input.parentElement;
+    const img = slot.querySelector('img');
+    return img && img.src ? img.src : null;
+  });
+
+  const datos = {
+    ot: pick('rps_ot'),
+    expediente: pick('rps_expediente'),
+    fecha_servicio: (function(){ const v = pick('rps_fecha'); return v==='—' ? '—' : (new Date(v).toISOString().slice(0,10)) })(),
+    hora_cierre: pick('rps_hora'),
+    tipo_servicio: pick('tipo_servicio'),
+    mandante: pick('mandante'),
+    cliente: { nombre: pick('cliente_nombre'), rut: pick('cliente_rut'), telefono: pick('cliente_tel') },
+    vehiculo: { patente: pick('veh_patente'), marca: pick('veh_marca'), modelo: pick('veh_modelo'), color: pick('veh_color') },
+    ruta: { desde: pick('ruta_desde'), hasta: pick('ruta_hasta') },
+    unidad: { unidad: pick('unidad_unidad'), marca_modelo: pick('unidad_marca_modelo'), operador: pick('operador_nombre') },
+    timeline: {
+      asignado: { fecha: formatFecha(document.getElementById('timeline_asignado')?.value), hora: formatHora(document.getElementById('timeline_asignado')?.value) },
+      iniciado: { fecha: formatFecha(document.getElementById('timeline_iniciado')?.value), hora: formatHora(document.getElementById('timeline_iniciado')?.value) },
+      ubicado: { fecha: formatFecha(document.getElementById('timeline_ubicado')?.value), hora: formatHora(document.getElementById('timeline_ubicado')?.value) },
+      trasladado: { fecha: formatFecha(document.getElementById('timeline_trasladado')?.value), hora: formatHora(document.getElementById('timeline_trasladado')?.value) },
+      entregado: { fecha: formatFecha(document.getElementById('timeline_entregado')?.value), hora: formatHora(document.getElementById('timeline_entregado')?.value) }
+    },
+    adicionales: pick('adicionales'),
+    fotos_origen: fotos(['foto_origen_frente','foto_origen_trasera','foto_origen_lat_izq','foto_origen_lat_der']),
+    fotos_destino: fotos(['foto_destino_1','foto_destino_2']),
+    inventario: {
+      ruedas: !!document.getElementById('inv_ruedas')?.checked,
+      radio: !!document.getElementById('inv_radio')?.checked,
+      tag: !!document.getElementById('inv_tag')?.checked,
+      llave: !!document.getElementById('inv_llave')?.checked,
+      documentos: !!document.getElementById('inv_documentos')?.checked,
+      triangulos: !!document.getElementById('inv_triangulos')?.checked,
+      gata: !!document.getElementById('inv_gata')?.checked,
+      llave_ruedas: !!document.getElementById('inv_llave_ruedas')?.checked,
+      extintor: !!document.getElementById('inv_extintor')?.checked,
+      chaleco: !!document.getElementById('inv_chaleco')?.checked,
+      pantalla: !!document.getElementById('inv_pantalla')?.checked,
+      neumatico: !!document.getElementById('inv_neumatico')?.checked
+    },
+    observaciones: { base: pick('obs_base'), operador: pick('obs_operador') },
+    danos: (function(){
+      const lista = [];
+      document.querySelectorAll('.marca-dano-grupo').forEach(g=>{
+        const id = g.getAttribute('data-id') || '';
+        const c = g.querySelector('circle');
+        const x = c ? c.getAttribute('cx') : null;
+        const y = c ? c.getAttribute('cy') : null;
+        const li = document.querySelector('#listaDanos li[data-id="'+id+'"]');
+        const tipo = li ? li.textContent.replace(/^\d+\.\s*/,'') : '';
+        lista.push({id, x, y, tipo});
+      });
+      return lista;
+    })(),
+    entrega_origen: { nombre: pick('entrega_origen_nombre'), rut: pick('entrega_origen_rut'), telefono: pick('entrega_origen_tel'), fecha: pick('entrega_origen_fecha') },
+    recepcion_destino: { nombre: pick('recep_nombre'), rut: pick('recep_rut'), telefono: pick('recep_tel'), fecha: pick('recep_fecha') },
+    declaracion: (document.getElementById('declaracion_text')?.textContent || '').trim()
+  };
+
+  // Convert empty strings to '—' consistently
+  const normalize = (v) => (v===null||v===undefined||v==='')? '—' : v;
+  // Normalize nested
+  datos.ot = normalize(datos.ot);
+  datos.vehiculo.patente = normalize(datos.vehiculo.patente);
+  return datos;
+}
+
+function renderizarReporte(datos){
+  const cont = document.getElementById('reporteFinal');
+  // Build HTML using grid 12 columns
+  const fotoMini = datos.fotos_origen[0] || datos.fotos_destino[0] || null;
+  const vehFoto = fotoMini ? '<img class="thumb" src="'+fotoMini+'" alt="foto">' : '<div style="width:100%;height:70px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999">Sin fotografía</div>';
+
+  const timelineItem = (label, item) => `<div style="text-align:center;font-size:10px;"><div style=\"font-weight:700;color:var(--azul-osc)\">${label}</div><div class=\"muted\">${item.fecha==='—'? '—': item.fecha + ' ' + item.hora}</div></div>`;
+
+  // Clone current diagrama (with marks) for the report
+  const diagramaWrap = document.querySelector('.diagrama-wrap');
+  const diagramaHTML = diagramaWrap ? diagramaWrap.outerHTML : '<div style="height:120px;background:#fafbfc;border:1px solid #eee;border-radius:6px"></div>';
+
+  const inventarioHTML = Object.entries(datos.inventario).map(([k,v])=>{
+    return `<div style=\"display:flex;align-items:center;gap:8px;font-size:11px\"><div style=\"width:14px;height:14px;border-radius:50%;background:${v? 'var(--verde)':'#e6e9ee'};flex:0 0 14px\"></div><div style=\"color:#333\">${k.replace(/_/g,' ')}</div></div>`
+  }).join('');
+
+  const fotosOrigenHTML = datos.fotos_origen.map(src=> src ? `<div style=\"width:100%;padding:2px\"><img class=\"thumb\" src=\"${src}\"></div>` : `<div style=\"width:100%;padding:2px\"><div style=\"width:100%;height:70px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999\">Sin fotografía</div></div>`).join('');
+  const fotosDestinoHTML = datos.fotos_destino.map(src=> src ? `<div style=\"width:100%;padding:2px\"><img class=\"thumb\" src=\"${src}\"></div>` : `<div style=\"width:100%;padding:2px\"><div style=\"width:100%;height:70px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999\">Sin fotografía</div></div>`).join('');
+
+  cont.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="width:56px;height:56px;border-radius:8px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">JOSETOW</div>
+        <div>
+          <div style="font-weight:700;color:var(--azul-osc)">JOSETOW</div>
+          <div class="muted">TRANSPORTE · RESCATE · ASISTENCIA EN RUTA</div>
+          <div class="muted">RUT · Teléfono · Dirección</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:700;background:var(--azul-osc);color:#fff;padding:6px 10px;border-radius:6px">REPORTE DE PRESTACIÓN DE SERVICIO</div>
+        <div style="margin-top:6px;font-size:12px"><strong>OT:</strong> ${datos.ot}</div>
+        <div style="font-size:12px"><strong>Expediente:</strong> ${datos.expediente}</div>
+        <div style="font-size:12px"><strong>Fecha:</strong> ${datos.fecha_servicio==='—' ? '—' : formatDateForDisplay(datos.fecha_servicio)}</div>
+        <div style="font-size:12px"><strong>Hora cierre:</strong> ${datos.hora_cierre || '—'}</div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-bottom:8px">
+      <div class="card" style="grid-column:span 3"> <div style="font-weight:700">Tipo de servicio</div><div class="muted">${datos.tipo_servicio}</div><hr><div style="font-weight:700">Mandante</div><div class="muted">${datos.mandante}</div></div>
+      <div class="card" style="grid-column:span 4"> <div style="font-weight:700">Cliente</div><div class="muted">${datos.cliente.nombre} · ${datos.cliente.rut} · ${datos.cliente.telefono}</div></div>
+      <div class="card" style="grid-column:span 5"> <div style="font-weight:700">Vehículo</div><div class="muted">${datos.vehiculo.patente} · ${datos.vehiculo.marca} ${datos.vehiculo.modelo} · ${datos.vehiculo.color}</div><div style="margin-top:6px">${vehFoto}</div></div>
+    </div>
+
+    <div class="grid" style="margin-bottom:8px">
+      <div class="card" style="grid-column:span 6"><div style="font-weight:700">Ruta del servicio</div><div class="muted">${datos.ruta.desde} → ${datos.ruta.hasta}</div></div>
+      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Unidad / Operador</div><div class="muted">${datos.unidad.unidad} · ${datos.unidad.marca_modelo} · ${datos.unidad.operador}</div></div>
+      <div class="card" style="grid-column:span 2"><div style="font-weight:700">Adicionales</div><div class="muted">${datos.adicionales}</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:8px;grid-column:span 12"> <div style="font-weight:700;margin-bottom:6px">Timeline del servicio</div>
+      <div style="display:flex;gap:12px;justify-content:space-between">${timelineItem('Asignado',datos.timeline.asignado)}${timelineItem('Iniciado',datos.timeline.iniciado)}${timelineItem('Ubicado',datos.timeline.ubicado)}${timelineItem('Trasladado',datos.timeline.trasladado)}${timelineItem('Entregado',datos.timeline.entregado)}</div>
+    </div>
+
+    <div class="grid" style="margin-bottom:8px">
+      <div class="card" style="grid-column:span 8"><div style="font-weight:700;margin-bottom:6px">Evidencia en origen</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${fotosOrigenHTML}</div></div>
+      <div class="card" style="grid-column:span 4"><div style="font-weight:700;margin-bottom:6px">Evidencia en destino</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">${fotosDestinoHTML}</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:8px;grid-column:span 12"> <div style="font-weight:700">Inventario accesorios</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px">${inventarioHTML}</div></div>
+
+    <div class="grid" style="margin-bottom:8px">
+      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Observaciones</div><div class="muted">${datos.observaciones.base}<br><strong>Operador:</strong> ${datos.observaciones.operador}</div></div>
+      <div class="card" style="grid-column:span 8"><div style="font-weight:700">Daños visibles</div>${diagramaHTML}</div>
+    </div>
+
+    <div class="grid" style="margin-bottom:8px">
+      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Entrega del vehículo (origen)</div><div class="muted">${datos.entrega_origen.nombre} · ${datos.entrega_origen.rut} · ${datos.entrega_origen.telefono} · ${datos.entrega_origen.fecha}</div></div>
+      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Recepción del vehículo (destino)</div><div class="muted">${datos.recepcion_destino.nombre} · ${datos.recepcion_destino.rut} · ${datos.recepcion_destino.telefono} · ${datos.recepcion_destino.fecha}</div></div>
+      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Declaración</div><div class="muted">${datos.declaracion}</div></div>
+    </div>
+
+    <div style="text-align:center;font-size:11px;color:#666;margin-top:8px">
+      <div><strong>JOSETOW</strong> · Asistencia en ruta · Documento generado digitalmente</div>
+      <div>Generado: ${new Date().toLocaleString()}</div>
+    </div>
+  `;
+}
+
+function formatDateForDisplay(isoDate){ if(!isoDate || isoDate==='—') return '—'; const d = new Date(isoDate); if(isNaN(d)) return '—'; return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear(); }
+
+function mostrarFormulario(){ document.getElementById('vistaReporte').style.display='none'; document.getElementById('hoja').style.display='block'; }
+
+function mostrarVistaPrevia(){ const datos = obtenerDatosReporte(); renderizarReporte(datos); document.getElementById('hoja').style.display='none'; document.getElementById('vistaReporte').style.display='flex'; }
+
+async function generarPDFFinal(event){ const btn = event?.target || document.getElementById('btnGenerarPDF'); const original = btn.textContent; try{ btn.textContent='Generando PDF…'; btn.disabled=true; mostrarVistaPrevia(); const sheet = document.getElementById('reporteFinal'); // wait images
+    const imgs = Array.from(sheet.querySelectorAll('img')); await Promise.all(imgs.map(img=>{ if(img.complete) return Promise.resolve(); return new Promise(res=>{ img.onload=res; img.onerror=res; }) }));
+    const datos = obtenerDatosReporte();
+    const filename = `RPS_${datos.ot || 'reporte'}_${datos.vehiculo.patente || 'NA'}_${datos.fecha_servicio || ''}.pdf`;
+    const opciones = { margin: [6,6,6,6], filename, image:{type:'jpeg',quality:0.95}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}, pagebreak:{mode:['css','legacy']} };
+    await html2pdf().set(opciones).from(sheet).save();
+  }catch(e){ console.error(e); alert('Error generando PDF final'); }
+  finally{ btn.textContent=original; btn.disabled=false; }
+}
+
+// Registrar controladores
+window.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('btnFormulario').addEventListener('click', mostrarFormulario);
+  document.getElementById('btnVistaPrevia').addEventListener('click', mostrarVistaPrevia);
+  document.getElementById('btnGenerarPDF').addEventListener('click', generarPDFFinal);
+});
 </script>
 
 </body>

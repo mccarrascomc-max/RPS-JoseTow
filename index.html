@@ -28,6 +28,38 @@
     margin:0 auto;
     background:#fff;
   }
+  #hoja.compact-mode{
+    max-width:none;
+    width:297mm;
+    font-size:11px;
+    padding:8px;
+  }
+  #hoja.compact-mode header.encabezado{
+    padding:10px;
+  }
+  #hoja.compact-mode .marca-texto h1{font-size:16px;}
+  #hoja.compact-mode .marca-texto p{font-size:9px;}
+  #hoja.compact-mode .marca-texto small{font-size:8px;}
+  #hoja.compact-mode .rps-box .rps-cuerpo{gap:4px;}
+  #hoja.compact-mode section{padding:10px 10px;}
+  #hoja.compact-mode .campo label{font-size:9px;}
+  #hoja.compact-mode .campo input,
+  #hoja.compact-mode .campo select,
+  #hoja.compact-mode .campo textarea{padding:6px 8px; font-size:12px;}
+  #hoja.compact-mode .grid2{grid-template-columns:1fr 1fr; gap:8px;}
+  #hoja.compact-mode .grid3{grid-template-columns:1fr 1fr 1fr; gap:8px;}
+  #hoja.compact-mode .timeline{gap:6px;}
+  #hoja.compact-mode .timeline .paso{min-width:auto; padding:6px;}
+  #hoja.compact-mode .foto-grupo{gap:6px;}
+  #hoja.compact-mode .foto-slot{aspect-ratio:1.4/1; padding:6px;}
+  #hoja.compact-mode .foto-slot span{font-size:9px;}
+  #hoja.compact-mode .foto-slot .etiqueta{font-size:8px; padding:2px 4px;}
+  #hoja.compact-mode .inventario{gap:6px 12px;}
+  #hoja.compact-mode .item-check{font-size:11px; padding:4px 0;}
+  #hoja.compact-mode .declaracion{font-size:10px; padding:8px;}
+  #hoja.compact-mode footer.pie{padding:10px; font-size:9px;}
+  #hoja.compact-mode #diagramaAuto{height:140px;}
+
   .toolbar{
     position:sticky;
     top:0;
@@ -314,7 +346,12 @@
 
   /* Ajustes para exportación a PDF: ocultar toolbar y controles de archivo vacíos */
   @media print{
+    body{padding:0;}
+    #hoja{margin:0;}
     .toolbar{display:none;}
+    section{page-break-inside:avoid;}
+    .foto-slot{page-break-inside:avoid;}
+    .timeline{page-break-inside:avoid;}
   }
 </style>
 </head>
@@ -322,7 +359,8 @@
 
   <div class="toolbar">
     <button type="button" class="secundario" onclick="limpiarFormulario()">Limpiar</button>
-    <button type="button" onclick="generarPDF()">Generar PDF</button>
+    <button type="button" onclick="generarPDF(event, false)">Generar PDF</button>
+    <button type="button" onclick="generarPDF(event, true)">Generar PDF compacto</button>
   </div>
 
   <div id="hoja">
@@ -658,7 +696,7 @@ function limpiarFormulario(){
 
 inicializarDiagrama();
 
-function generarPDF(){
+function generarPDF(event, compacto = false){
   const boton = event.target;
   const original = boton.textContent;
   boton.textContent = 'Generando...';
@@ -683,20 +721,24 @@ function generarPDF(){
   });
 
   const opciones = {
-    margin: 0,
+    margin: compacto ? [5, 5, 5, 5] : 0,
     filename: 'RPS_' + (document.querySelector('.rps-cuerpo input').value || 'reporte') + '.pdf',
     image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    html2canvas: { scale: compacto ? 1.2 : 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: compacto ? 'landscape' : 'portrait' },
+    pagebreak: { mode: ['css', 'legacy'] }
   };
+
+  if(compacto) hoja.classList.add('compact-mode');
 
   html2pdf().set(opciones).from(hoja).save().then(()=>{
     reemplazos.forEach(r=>{ r.span.remove(); r.el.style.display = ''; });
+    if(compacto) hoja.classList.remove('compact-mode');
     boton.textContent = original;
     boton.disabled = false;
   }).catch(()=>{
     reemplazos.forEach(r=>{ r.span.remove(); r.el.style.display = ''; });
+    if(compacto) hoja.classList.remove('compact-mode');
     boton.textContent = original;
     boton.disabled = false;
     alert('Hubo un problema generando el PDF, intenta de nuevo.');

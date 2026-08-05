@@ -633,7 +633,8 @@
   </div>
   
   <!-- Vista de reporte final (separada) -->
-  <div id="vistaReporte" style="display:none;padding:18px;">
+  <div id="vistaReporte" style="display:none;padding:18px;position:relative;">
+    <button id="btnVolver" style="position:fixed;right:18px;top:84px;z-index:2500;background:#2c4a6e;color:#fff;border:none;padding:10px 12px;border-radius:8px;cursor:pointer">Volver al formulario</button>
     <div id="reporteFinal" style="width:297mm;min-height:210mm;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:12mm;font-family:inherit;border-radius:6px;">
       <!-- contenido generado dinámicamente -->
     </div>
@@ -954,6 +955,8 @@ window.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('btnFormulario').addEventListener('click', mostrarFormulario);
   document.getElementById('btnVistaPrevia').addEventListener('click', mostrarVistaPrevia);
   document.getElementById('btnGenerarPDF').addEventListener('click', generarPDFFinal);
+  const volver = document.getElementById('btnVolver');
+  if(volver) volver.addEventListener('click', ()=>{ mostrarFormulario(); window.scrollTo({top:0,behavior:'smooth'}); });
 });
 </script>
 

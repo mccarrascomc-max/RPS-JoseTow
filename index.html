@@ -66,7 +66,7 @@
   #hoja.oculta{display:none}
   #formActions.oculta{display:none}
   .preview-frame{position:relative;width:100%;display:flex;justify-content:center}
-  #reporteFinal{width:210mm;height:297mm;min-height:297mm;overflow:hidden;background:#fff;color:#111827;box-shadow:0 8px 22px rgba(15,23,42,.15);padding:6mm;transform-origin:top center}
+  #reporteFinal{width:210mm;height:296mm;min-height:296mm;overflow:hidden;background:#fff;color:#111827;box-shadow:0 8px 22px rgba(15,23,42,.15);padding:6mm;transform-origin:top center}
   #reporteFinal .report-header{display:grid;grid-template-columns:1.45fr 1fr;gap:4mm;margin-bottom:3mm}
   #reporteFinal .brand-box{display:flex;gap:3mm;align-items:center;border-bottom:2px solid var(--azul);padding-bottom:2mm}
   #reporteFinal .brand-mark{width:14mm;height:14mm;border-radius:2mm;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17pt;font-weight:900}
@@ -402,10 +402,17 @@
     const previo=$("vistaReporte").classList.contains("activa");
     document.body.classList.add("pdf-mode");
     $("vistaReporte").classList.add("activa");
-    $("reporteFinal").style.transform="none";
+    const reporte=$("reporteFinal");
+    reporte.style.transform="none";
     const ot=val("rps_ot")||"RPS";
-    const opt={margin:0,filename:`${ot.replace(/[^\w-]+/g,"_")}_JOSETOW.pdf`,image:{type:"jpeg",quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:[]}};
-    try{await html2pdf().set(opt).from($("reporteFinal")).save();}
+    const filename=`${ot.replace(/[^\w-]+/g,"_")}_JOSETOW.pdf`;
+    try{
+      const canvas=await html2canvas(reporte,{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0,windowWidth:reporte.scrollWidth,windowHeight:reporte.scrollHeight});
+      const imgData=canvas.toDataURL("image/jpeg",0.98);
+      const pdf=new jspdf.jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+      pdf.addImage(imgData,"JPEG",0,0,210,297,undefined,"FAST");
+      pdf.save(filename);
+    }
     finally{
       document.body.classList.remove("pdf-mode");
       btn.disabled=false;btn.textContent="Generar PDF";

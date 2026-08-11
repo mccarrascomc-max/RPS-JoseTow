@@ -3,511 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RPS - Reporte de Prestación de Servicio</title>
+<title>RPS - Reporte de Prestacion de Servicio</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root{
     --azul:#1a3a5c;
     --azul-osc:#0f2740;
     --rojo:#c0392b;
-    --gris-bg:#f3f4f6;
-    --gris-borde:#d9dde3;
     --verde:#2e9e5b;
+    --gris-bg:#eef2f6;
+    --gris-borde:#d9dde3;
     --texto:#1f2937;
   }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:var(--gris-bg);
-    color:var(--texto);
-    padding-bottom:100px;
-  }
-  #hoja{
-    max-width:820px;
-    margin:0 auto;
-    background:#fff;
-  }
-  #hoja.compact-mode{
-    max-width:none;
-    width:297mm;
-    font-size:11px;
-    padding:8px;
-  }
-  #hoja.compact-mode header.encabezado{
-    padding:10px;
-  }
-  #hoja.compact-mode .marca-texto h1{font-size:15px;}
-  #hoja.compact-mode .marca-texto p{font-size:8px;}
-  #hoja.compact-mode .marca-texto small{font-size:7px;}
-  #hoja.compact-mode .rps-box .rps-cuerpo{gap:3px;}
-  #hoja.compact-mode section{padding:8px 8px;}
-  #hoja.compact-mode .campo label{font-size:8px;}
-  #hoja.compact-mode .campo input,
-  #hoja.compact-mode .campo select,
-  #hoja.compact-mode .campo textarea{padding:5px 6px; font-size:11px;}
-  #hoja.compact-mode .grid2{grid-template-columns:1fr 1fr; gap:6px;}
-  #hoja.compact-mode .grid3{grid-template-columns:1fr 1fr 1fr; gap:6px;}
-  #hoja.compact-mode .timeline{gap:4px;}
-  #hoja.compact-mode .timeline .paso{min-width:auto; padding:4px;}
-  #hoja.compact-mode .timeline .paso label{font-size:8px;}
-  #hoja.compact-mode .timeline .paso input{font-size:10px; padding:4px;}
-  #hoja.compact-mode .foto-grupo{gap:4px;}
-  #hoja.compact-mode .foto-slot{width:80px; height:80px; min-height:80px; padding:4px;}
-  #hoja.compact-mode .foto-slot span{font-size:8px;}
-  #hoja.compact-mode .foto-slot .etiqueta{font-size:7px; padding:2px 3px;}
-  #hoja.compact-mode .inventario{gap:4px 8px;}
-  #hoja.compact-mode .item-check{font-size:10px; padding:3px 0;}
-  #hoja.compact-mode .item-check input[type=checkbox]{width:16px; height:16px;}
-  #hoja.compact-mode .declaracion{font-size:9px; padding:6px;}
-  #hoja.compact-mode footer.pie{padding:8px; font-size:8px;}
-  #hoja.compact-mode #diagramaAuto{height:110px;}
-  #hoja.compact-mode .toolbar{display:none;}
-  #hoja.compact-mode header.encabezado{display:grid; grid-template-columns:1.6fr 1.4fr; gap:8px;}
-  #hoja.compact-mode .marca{gap:6px;}
-  #hoja.compact-mode .marca-texto{gap:4px;}
-  #hoja.compact-mode .logo-placeholder{width:48px; height:48px; font-size:10px;}
-  #hoja.compact-mode .rps-box{min-width:auto;}
-  #hoja.compact-mode .rps-box .rps-titulo{font-size:9px; padding:3px;}
-  #hoja.compact-mode .rps-box .rps-cuerpo{font-size:10px;}
-  #hoja.compact-mode .rps-box .rps-cuerpo label{font-size:7px;}
-  #hoja.compact-mode .field-row{display:grid; grid-template-columns:1fr 1fr; gap:6px;}
-
-  .toolbar{
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:var(--azul-osc);
-    padding:10px 14px;
-    display:flex;
-    gap:10px;
-    justify-content:flex-end;
-  }
-  .toolbar button{
-    background:var(--rojo);
-    color:#fff;
-    border:none;
-    padding:10px 16px;
-    border-radius:8px;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-  }
-  .toolbar button.secundario{
-    background:#2c4a6e;
-  }
-
-  header.encabezado{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:16px;
-    border-bottom:3px solid var(--azul);
-    flex-wrap:wrap;
-  }
-  .marca{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .logo-placeholder{
-    width:56px;
-    height:56px;
-    border-radius:8px;
-    background:var(--azul);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    font-size:11px;
-    text-align:center;
-    line-height:1.1;
-    letter-spacing:.5px;
-  }
-  .marca-texto h1{
-    margin:0;
-    font-size:18px;
-    color:var(--azul-osc);
-  }
-  .marca-texto p{
-    margin:2px 0 0;
-    font-size:11px;
-    color:var(--rojo);
-    font-weight:600;
-    letter-spacing:.4px;
-  }
-  .marca-texto small{
-    display:block;
-    font-size:10px;
-    color:#666;
-    margin-top:2px;
-  }
-  .rps-box{
-    border:1px solid var(--gris-borde);
-    border-radius:8px;
-    overflow:hidden;
-    min-width:230px;
-    flex:1;
-  }
-  .rps-box .rps-titulo{
-    background:var(--azul-osc);
-    color:#fff;
-    font-size:10px;
-    text-align:center;
-    padding:4px;
-    letter-spacing:.5px;
-  }
-  .rps-box .rps-cuerpo{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:6px;
-    padding:8px;
-    font-size:11px;
-  }
-  .rps-box label{
-    display:block;
-    color:#666;
-    font-size:9px;
-    text-transform:uppercase;
-    margin-bottom:2px;
-  }
-
-  section{
-    padding:14px 16px;
-    border-bottom:1px solid var(--gris-borde);
-  }
-  section h2{
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.4px;
-    color:var(--azul);
-    margin:0 0 10px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-  }
-  section h2::before{
-    content:"";
-    width:6px;
-    height:6px;
-    background:var(--rojo);
-    border-radius:50%;
-  }
-
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-  @media (max-width:600px){
-    .grid2,.grid3{grid-template-columns:1fr;}
-    .rps-box .rps-cuerpo{grid-template-columns:1fr;}
-  }
-
-  .campo{margin-bottom:10px;}
-  .campo label{
-    display:block;
-    font-size:11px;
-    color:#555;
-    margin-bottom:4px;
-    font-weight:600;
-  }
-  .campo input,
-  .campo select,
-  .campo textarea{
-    width:100%;
-    padding:9px 10px;
-    border:1px solid var(--gris-borde);
-    border-radius:6px;
-    font-size:14px;
-    font-family:inherit;
-    background:#fafbfc;
-  }
-  .campo textarea{resize:vertical;min-height:60px;}
-
-  .timeline{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    justify-content:space-between;
-  }
-  .timeline .paso{
-    flex:1;
-    min-width:130px;
-    text-align:center;
-  }
-  .timeline .paso .punto{
-    width:10px;height:10px;border-radius:50%;
-    background:var(--azul);
-    margin:0 auto 6px;
-  }
-  .timeline .paso label{
-    font-size:10px;
-    text-transform:uppercase;
-    color:#666;
-    display:block;
-    margin-bottom:4px;
-  }
-  .timeline .paso input{
-    font-size:12px;
-    padding:6px;
-    text-align:center;
-  }
-
-  .foto-grupo{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-    gap:10px;
-  }
-  .foto-slot{
-    border:1.5px dashed var(--gris-borde);
-    border-radius:8px;
-    aspect-ratio:1/1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    overflow:hidden;
-    background:#fafbfc;
-    text-align:center;
-    padding:4px;
-  }
-  .foto-slot img{
-    width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;
-  }
-  .foto-slot span{
-    font-size:10px;color:#888;
-  }
-  .foto-slot input[type=file]{
-    position:absolute;inset:0;opacity:0;cursor:pointer;
-  }
-  .foto-slot .etiqueta{
-    position:absolute;bottom:0;left:0;right:0;
-    background:rgba(15,39,64,.75);
-    color:#fff;font-size:9px;padding:3px;
-  }
-
-  .inventario{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px 20px;
-  }
-  @media (max-width:600px){.inventario{grid-template-columns:1fr;}}
-  .item-check{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:13px;
-    padding:6px 0;
-    border-bottom:1px dotted var(--gris-borde);
-  }
-  .item-check input[type=checkbox]{
-    width:20px;height:20px;
-    accent-color:var(--verde);
-  }
-
-  .diagrama-wrap{
-    border:1px solid var(--gris-borde);
-    border-radius:8px;
-    background:#fafbfc;
-    padding:10px;
-  }
-  #diagramaAuto{
-    width:100%;
-    height:auto;
-    cursor:crosshair;
-    touch-action:manipulation;
-  }
-  .marca-dano{
-    fill:var(--rojo);
-    stroke:#fff;
-    stroke-width:1.5;
-    cursor:pointer;
-  }
-  .marca-dano-num{
-    font-size:9px;
-    fill:#fff;
-    font-weight:700;
-    text-anchor:middle;
-    pointer-events:none;
-  }
-  .lista-danos{
-    margin:10px 0 0;
-    padding-left:20px;
-    font-size:12px;
-    color:#444;
-  }
-  .lista-danos li{margin-bottom:4px;}
-
-  .declaracion{
-    font-size:11px;
-    color:#555;
-    line-height:1.5;
-    background:#fafbfc;
-    padding:10px;
-    border-radius:6px;
-    border:1px solid var(--gris-borde);
-  }
-
-  footer.pie{
-    padding:14px 16px;
-    text-align:center;
-    font-size:10px;
-    color:#888;
-  }
-  footer.pie strong{color:var(--azul-osc);}
-
-  /* Ajustes para exportación a PDF: ocultar toolbar y controles de archivo vacíos */
-  @media print{
-    body{padding:0;}
-    #hoja{margin:0;}
-    .toolbar{display:none;}
-    section{page-break-inside:avoid;}
-    .foto-slot{page-break-inside:avoid;}
-    .timeline{page-break-inside:avoid;}
-  }
-  /* Estilos de la vista de reporte */
-  #vistaReporte{display:flex;justify-content:center;align-items:flex-start;background:transparent}
-  #reporteFinal{color:var(--texto);box-sizing:border-box}
-  #reporteFinal .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
-  #reporteFinal .card{background:#fff;border:1px solid var(--gris-borde);border-radius:8px;padding:8px}
-  #reporteFinal .muted{color:#666;font-size:11px}
-  #reporteFinal img.thumb{width:100%;height:70px;object-fit:cover;border-radius:6px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--gris-bg);color:var(--texto);padding-bottom:80px}
+  button,input,select,textarea{font:inherit}
+  .toolbar{position:sticky;top:0;z-index:30;background:var(--azul-osc);display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px}
+  .toolbar button,.action-button{border:0;border-radius:8px;background:var(--rojo);color:#fff;font-weight:700;padding:9px 12px;cursor:pointer}
+  .toolbar button.secundario,.action-button.secundario{background:#2c4a6e}
+  .toolbar button:disabled{opacity:.65;cursor:wait}
+  #formActions{max-width:920px;margin:0 auto;padding:12px 14px 0;display:flex;gap:8px}
+  #hoja{max-width:920px;margin:0 auto;background:#fff}
+  header.encabezado{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:16px;border-bottom:3px solid var(--azul);flex-wrap:wrap}
+  .marca{display:flex;gap:10px;align-items:center}
+  .logo-placeholder{width:56px;height:56px;border-radius:8px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;letter-spacing:.04em}
+  .marca-texto h1{margin:0;color:var(--azul-osc);font-size:20px}
+  .marca-texto p{margin:2px 0 0;color:var(--rojo);font-size:11px;font-weight:800;letter-spacing:.04em}
+  .marca-texto small{display:block;color:#64748b;font-size:10px;margin-top:2px}
+  .rps-box{border:1px solid var(--gris-borde);border-radius:8px;overflow:hidden;min-width:260px;flex:1;max-width:430px}
+  .rps-titulo{background:var(--azul-osc);color:#fff;text-align:center;padding:6px;font-size:11px;font-weight:800;letter-spacing:.05em}
+  .rps-cuerpo{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+  section{padding:14px 16px;border-bottom:1px solid var(--gris-borde)}
+  section h2{margin:0 0 10px;color:var(--azul);font-size:12px;letter-spacing:.04em;text-transform:uppercase;display:flex;gap:6px;align-items:center}
+  section h2:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--rojo)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .campo{margin-bottom:10px}
+  .campo label,.rps-cuerpo label{display:block;font-size:11px;color:#475569;font-weight:700;margin-bottom:4px}
+  .campo input,.campo textarea,.rps-cuerpo input{width:100%;border:1px solid var(--gris-borde);border-radius:6px;background:#fafbfc;padding:9px 10px}
+  .campo textarea{min-height:66px;resize:vertical}
+  .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .paso{border:1px solid var(--gris-borde);border-radius:8px;padding:8px;background:#fafbfc;text-align:center}
+  .paso .punto{width:9px;height:9px;border-radius:50%;background:var(--azul);margin:0 auto 6px}
+  .paso label{font-size:10px;text-transform:uppercase;color:#64748b;font-weight:800}
+  .paso input{width:100%;margin-top:4px;border:1px solid var(--gris-borde);border-radius:6px;padding:6px;font-size:12px}
+  .foto-grupo{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .foto-slot{position:relative;overflow:hidden;min-height:120px;aspect-ratio:1/1;border:1.5px dashed var(--gris-borde);border-radius:8px;background:#fafbfc;display:flex;align-items:center;justify-content:center;text-align:center;color:#64748b;font-size:12px}
+  .foto-slot input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .foto-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .foto-slot .etiqueta{position:absolute;left:0;right:0;bottom:0;background:rgba(15,39,64,.78);color:#fff;font-size:10px;font-weight:800;padding:4px}
+  .inventario{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 20px}
+  .item-check{display:flex;align-items:center;justify-content:space-between;border-bottom:1px dotted var(--gris-borde);padding:6px 0;font-size:13px}
+  .item-check input{width:20px;height:20px;accent-color:var(--verde)}
+  .diagrama-wrap{border:1px solid var(--gris-borde);border-radius:8px;background:#fafbfc;padding:10px}
+  #diagramaAuto{width:100%;height:auto;cursor:crosshair;touch-action:manipulation}
+  .marca-dano{fill:var(--rojo);stroke:#fff;stroke-width:1.5;cursor:pointer}
+  .marca-dano-num{font-size:9px;fill:#fff;font-weight:800;text-anchor:middle;pointer-events:none}
+  .lista-danos{margin:10px 0 0;padding-left:20px;font-size:12px;color:#334155}
+  footer.pie{padding:14px 16px;text-align:center;color:#64748b;font-size:10px}
+  #vistaReporte{display:none;background:#eef2f6;min-height:100vh;justify-content:center;align-items:flex-start;padding:12px;overflow-x:hidden}
+  #vistaReporte.activa{display:flex}
+  #hoja.oculta{display:none}
+  #formActions.oculta{display:none}
+  .preview-frame{position:relative;width:100%;display:flex;justify-content:center}
+  #reporteFinal{width:210mm;height:297mm;min-height:297mm;overflow:hidden;background:#fff;color:#111827;box-shadow:0 8px 22px rgba(15,23,42,.15);padding:6mm;transform-origin:top center}
+  #reporteFinal .report-header{display:grid;grid-template-columns:1.45fr 1fr;gap:4mm;margin-bottom:3mm}
+  #reporteFinal .brand-box{display:flex;gap:3mm;align-items:center;border-bottom:2px solid var(--azul);padding-bottom:2mm}
+  #reporteFinal .brand-mark{width:14mm;height:14mm;border-radius:2mm;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17pt;font-weight:900}
+  #reporteFinal .brand-title{font-size:13pt;font-weight:900;color:var(--azul-osc);line-height:1}
+  #reporteFinal .brand-sub{font-size:6.5pt;color:var(--rojo);font-weight:800;letter-spacing:.03em;margin-top:1mm}
+  #reporteFinal .rps-card{border:1px solid #cbd5e1;border-radius:2mm;overflow:hidden}
+  #reporteFinal .rps-card-title{background:var(--azul-osc);color:#fff;font-size:7pt;text-align:center;font-weight:900;padding:1.5mm;letter-spacing:.04em}
+  #reporteFinal .rps-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;padding:2mm}
+  #reporteFinal .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:2mm}
+  #reporteFinal .card{border:1px solid #dfe5ec;border-radius:2mm;background:#fff;padding:2mm;min-height:0}
+  #reporteFinal .span2{grid-column:span 2}.span3{grid-column:span 3}.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
+  #reporteFinal .card-title{font-size:6.7pt;text-transform:uppercase;font-weight:900;color:var(--azul);letter-spacing:.04em;margin-bottom:1.4mm;line-height:1.1}
+  #reporteFinal .text-sm{font-size:7.2pt;line-height:1.18;color:#111827;overflow-wrap:anywhere}
+  #reporteFinal .muted,#reporteFinal .text-muted{font-size:6.5pt;line-height:1.15;color:#475569;overflow-wrap:anywhere}
+  #reporteFinal .vehicle-card{display:grid;grid-template-columns:1.35fr 20mm;gap:2mm;align-items:start}
+  #reporteFinal .vehicle-thumb{width:20mm;height:17mm;object-fit:cover;border-radius:1.5mm;background:#eef2f6;border:1px solid #dfe5ec}
+  #reporteFinal .timeline-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1.3mm}
+  #reporteFinal .timeline-step{text-align:center;border:1px solid #dfe5ec;border-radius:1.5mm;padding:1.2mm}
+  #reporteFinal .timeline-step .label{font-size:5.7pt;color:var(--azul-osc);font-weight:900;text-transform:uppercase}
+  #reporteFinal .timeline-step .value{font-size:6.2pt;margin-top:.7mm;color:#111827}
+  #reporteFinal .photos{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm}
+  #reporteFinal .photos.two{grid-template-columns:repeat(2,1fr)}
+  #reporteFinal .report-photo{position:relative;height:18mm;background:#eef2f6;border-radius:1.5mm;overflow:hidden;border:1px solid #dfe5ec}
+  #reporteFinal .report-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  #reporteFinal .report-photo-label{position:absolute;left:0;right:0;bottom:0;background:rgba(15,39,64,.78);color:#fff;text-align:center;font-size:5.5pt;font-weight:900;padding:.6mm}
+  #reporteFinal .inventory-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1mm}
+  #reporteFinal .inventory-item{display:flex;gap:1mm;align-items:center;font-size:6.3pt;line-height:1.05}
+  #reporteFinal .inventory-icon{width:3.5mm;height:3.5mm;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:5pt;font-weight:900;flex:0 0 auto}
+  #reporteFinal .inventory-icon.checked{background:var(--verde);color:#fff}
+  #reporteFinal .inventory-icon.unchecked{border:1px solid #cbd5e1;color:#64748b}
+  #reporteFinal .damage-area{display:grid;grid-template-columns:1fr 1.1fr;gap:2mm;align-items:start}
+  #reporteFinal .damage-svg{width:100%;height:35mm}
+  #reporteFinal .damage-list{margin:0;padding-left:4mm;font-size:6.4pt;line-height:1.18}
+  #reporteFinal .footer-note{font-size:6pt;color:#475569;line-height:1.2;text-align:center;border-top:1px solid #dfe5ec;margin-top:2mm;padding-top:1.5mm}
+  .pdf-mode #reporteFinal{box-shadow:none;transform:none!important}
   @media (max-width:700px){
-    #reporteFinal{transform:scale(.72);transform-origin:top center}
+    .grid2,.grid3,.timeline,.inventario{grid-template-columns:1fr}
+    .rps-cuerpo{grid-template-columns:1fr}
   }
 </style>
 </head>
 <body>
-
   <div class="toolbar">
-    <button type="button" class="secundario" onclick="limpiarFormulario()">Limpiar</button>
-    <button type="button" id="btnFormulario">Formulario</button>
+    <button type="button" id="btnFormulario" class="secundario">Formulario</button>
     <button type="button" id="btnVistaPrevia">Vista previa</button>
     <button type="button" id="btnGenerarPDF">Generar PDF</button>
-    <button type="button" onclick="generarPDF(event, false)">Generar PDF (legacy)</button>
-    <button type="button" onclick="generarPDF(event, true)">Generar PDF compacto</button>
   </div>
-
+  <div id="formActions">
+    <button type="button" class="action-button secundario" onclick="limpiarFormulario()">Limpiar</button>
+  </div>
   <div id="hoja">
-
     <header class="encabezado">
       <div class="marca">
-        <div class="logo-placeholder">LOGO<br>JOSETOW</div>
+        <div class="logo-placeholder">JT</div>
         <div class="marca-texto">
-          <h1 contenteditable="true">JOSETOW</h1>
-          <p contenteditable="true">TRANSPORTE · RESCATE · ASISTENCIA EN RUTA</p>
-          <small contenteditable="true">RUT: 00.000.000-0 · +56 9 0000 0000</small>
-          <small contenteditable="true">Dirección, Comuna, Santiago - Chile</small>
+          <h1 contenteditable="true" id="empresa_nombre">JOSETOW</h1>
+          <p contenteditable="true" id="empresa_subtitulo">TRANSPORTE · RESCATE · ASISTENCIA EN RUTA</p>
+          <small contenteditable="true" id="empresa_contacto">RUT: 00.000.000-0 · +56 9 0000 0000</small>
+          <small contenteditable="true" id="empresa_direccion">Direccion, Comuna, Santiago - Chile</small>
         </div>
       </div>
-
       <div class="rps-box">
-        <div class="rps-titulo">REPORTE DE PRESTACIÓN DE SERVICIO</div>
+        <div class="rps-titulo">REPORTE DE PRESTACION DE SERVICIO</div>
         <div class="rps-cuerpo">
-          <div>
-            <label for="rps_ot">OT / RPS</label>
-            <input id="rps_ot" type="text" placeholder="G26-00856">
-          </div>
-          <div>
-            <label for="rps_expediente">Expediente</label>
-            <input id="rps_expediente" type="text" placeholder="3162605">
-          </div>
-          <div>
-            <label for="rps_fecha">Fecha servicio</label>
-            <input id="rps_fecha" type="date">
-          </div>
-          <div>
-            <label for="rps_hora">Hora cierre</label>
-            <input id="rps_hora" type="time">
-          </div>
+          <div><label for="rps_ot">OT / RPS</label><input id="rps_ot" type="text" placeholder="G26-00856"></div>
+          <div><label for="rps_expediente">Expediente</label><input id="rps_expediente" type="text" placeholder="3162605"></div>
+          <div><label for="rps_fecha">Fecha servicio</label><input id="rps_fecha" type="date"></div>
+          <div><label for="rps_hora">Hora cierre</label><input id="rps_hora" type="time"></div>
         </div>
       </div>
     </header>
-
     <section>
       <h2>Tipo de servicio / Mandante</h2>
       <div class="grid2">
-        <div class="campo">
-          <label for="tipo_servicio">Tipo de servicio</label>
-          <input id="tipo_servicio" type="text" placeholder="Traslado">
-        </div>
-        <div class="campo">
-          <label for="mandante">Mandante</label>
-          <input id="mandante" type="text" placeholder="Reale Chile Seguros Generales S.A.">
-        </div>
+        <div class="campo"><label for="tipo_servicio">Tipo de servicio</label><input id="tipo_servicio" type="text" placeholder="Traslado"></div>
+        <div class="campo"><label for="mandante">Mandante</label><input id="mandante" type="text" placeholder="Reale Chile Seguros Generales S.A."></div>
       </div>
     </section>
-
     <section>
-      <h2>Cliente (compañía)</h2>
+      <h2>Cliente</h2>
       <div class="grid3">
         <div class="campo"><label for="cliente_nombre">Nombre</label><input id="cliente_nombre" type="text"></div>
         <div class="campo"><label for="cliente_rut">RUT</label><input id="cliente_rut" type="text"></div>
-        <div class="campo"><label for="cliente_tel">Teléfono</label><input id="cliente_tel" type="tel"></div>
+        <div class="campo"><label for="cliente_tel">Telefono</label><input id="cliente_tel" type="tel"></div>
       </div>
     </section>
-
     <section>
-      <h2>Vehículo</h2>
+      <h2>Vehiculo</h2>
       <div class="grid3">
         <div class="campo"><label for="veh_patente">Patente</label><input id="veh_patente" type="text"></div>
         <div class="campo"><label for="veh_marca">Marca</label><input id="veh_marca" type="text"></div>
         <div class="campo"><label for="veh_modelo">Modelo</label><input id="veh_modelo" type="text"></div>
         <div class="campo"><label for="veh_color">Color</label><input id="veh_color" type="text"></div>
+        <div class="campo"><label for="veh_km">Kilometraje</label><input id="veh_km" type="text"></div>
       </div>
     </section>
-
     <section>
       <h2>Ruta del servicio</h2>
-      <div class="campo"><label for="ruta_desde">Desde</label><input id="ruta_desde" type="text"></div>
-      <div class="campo"><label for="ruta_hasta">Hasta</label><input id="ruta_hasta" type="text"></div>
+      <div class="grid2">
+        <div class="campo"><label for="ruta_desde">Desde</label><input id="ruta_desde" type="text"></div>
+        <div class="campo"><label for="ruta_hasta">Hasta</label><input id="ruta_hasta" type="text"></div>
+      </div>
     </section>
-
     <section>
       <h2>Unidad / Operador</h2>
-      <div class="grid2">
+      <div class="grid3">
         <div class="campo"><label for="unidad_unidad">Unidad</label><input id="unidad_unidad" type="text"></div>
         <div class="campo"><label for="unidad_marca_modelo">Marca / Modelo unidad</label><input id="unidad_marca_modelo" type="text"></div>
         <div class="campo"><label for="operador_nombre">Operador</label><input id="operador_nombre" type="text"></div>
       </div>
     </section>
-
     <section>
       <h2>Timeline del servicio</h2>
       <div class="timeline">
-        <div class="paso">
-          <div class="punto"></div>
-          <label for="timeline_asignado">Asignado</label>
-          <input id="timeline_asignado" type="datetime-local">
-        </div>
-        <div class="paso">
-          <div class="punto"></div>
-          <label for="timeline_iniciado">Iniciado</label>
-          <input id="timeline_iniciado" type="datetime-local">
-        </div>
-        <div class="paso">
-          <div class="punto"></div>
-          <label for="timeline_ubicado">Ubicado</label>
-          <input id="timeline_ubicado" type="datetime-local">
-        </div>
-        <div class="paso">
-          <div class="punto"></div>
-          <label for="timeline_trasladado">Trasladado</label>
-          <input id="timeline_trasladado" type="datetime-local">
-        </div>
-        <div class="paso">
-          <div class="punto"></div>
-          <label for="timeline_entregado">Entregado</label>
-          <input id="timeline_entregado" type="datetime-local">
-        </div>
+        <div class="paso"><div class="punto"></div><label for="timeline_asignado">Asignado</label><input id="timeline_asignado" type="datetime-local"></div>
+        <div class="paso"><div class="punto"></div><label for="timeline_iniciado">Iniciado</label><input id="timeline_iniciado" type="datetime-local"></div>
+        <div class="paso"><div class="punto"></div><label for="timeline_ubicado">Ubicado</label><input id="timeline_ubicado" type="datetime-local"></div>
+        <div class="paso"><div class="punto"></div><label for="timeline_trasladado">Trasladado</label><input id="timeline_trasladado" type="datetime-local"></div>
+        <div class="paso"><div class="punto"></div><label for="timeline_entregado">Entregado</label><input id="timeline_entregado" type="datetime-local"></div>
       </div>
-      <div class="campo" style="margin-top:12px;">
-        <label for="adicionales">Adicionales</label>
-        <input id="adicionales" type="text" placeholder="Ej: ad-urr-3">
-      </div>
+      <div class="campo" style="margin-top:12px"><label for="adicionales">Adicionales</label><input id="adicionales" type="text" placeholder="Ej: ad-urr-3"></div>
     </section>
-
     <section>
       <h2>Evidencia en origen</h2>
       <div class="foto-grupo">
@@ -517,7 +198,6 @@
         <div class="foto-slot"><span>+ Lat. der.</span><input id="foto_origen_lat_der" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">LAT. DER</div></div>
       </div>
     </section>
-
     <section>
       <h2>Evidencia en destino</h2>
       <div class="foto-grupo">
@@ -525,7 +205,6 @@
         <div class="foto-slot"><span>+ Foto 2</span><input id="foto_destino_2" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(this)"><div class="etiqueta">FOTO 2</div></div>
       </div>
     </section>
-
     <section>
       <h2>Inventario accesorios</h2>
       <div class="inventario">
@@ -534,431 +213,218 @@
         <label class="item-check">TAG <input id="inv_tag" type="checkbox"></label>
         <label class="item-check">Llave <input id="inv_llave" type="checkbox"></label>
         <label class="item-check">Documentos <input id="inv_documentos" type="checkbox"></label>
-        <label class="item-check">Triángulos <input id="inv_triangulos" type="checkbox"></label>
+        <label class="item-check">Triangulos <input id="inv_triangulos" type="checkbox"></label>
         <label class="item-check">Gata <input id="inv_gata" type="checkbox"></label>
         <label class="item-check">Llave ruedas <input id="inv_llave_ruedas" type="checkbox"></label>
         <label class="item-check">Extintor <input id="inv_extintor" type="checkbox"></label>
         <label class="item-check">Chaleco <input id="inv_chaleco" type="checkbox"></label>
-        <label class="item-check">Pantalla <input id="inv_pantalla" type="checkbox"></label>
-        <label class="item-check">Neumático repuesto <input id="inv_neumatico" type="checkbox"></label>
       </div>
     </section>
-
-    <section>
-      <h2>Observaciones</h2>
-      <div class="campo">
-        <label for="obs_base">Observación base</label>
-        <textarea id="obs_base" placeholder="Estado de ruedas, transmisión, solicitud del cliente, fallas..."></textarea>
-      </div>
-      <div class="campo">
-        <label for="obs_operador">Observación del operador</label>
-        <textarea id="obs_operador" placeholder="Sin novedad."></textarea>
-      </div>
-    </section>
-
     <section>
       <h2>Daños visibles</h2>
-      <p style="font-size:11px;color:#777;margin:0 0 10px;">Toca cualquier punto del vehículo para marcar un daño. Doble clic sobre una marca para eliminarla.</p>
-
-      <div class="diagrama-wrap">
-        <svg id="diagramaAuto" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
-          <!-- Carrocería vista superior -->
-          <rect x="60" y="40" width="280" height="140" rx="28" fill="none" stroke="#1a3a5c" stroke-width="2"/>
-          <!-- Parabrisas / techo -->
-          <rect x="140" y="55" width="120" height="110" rx="14" fill="none" stroke="#1a3a5c" stroke-width="1.4"/>
-          <line x1="200" y1="55" x2="200" y2="165" stroke="#1a3a5c" stroke-width="1"/>
-          <!-- Capó y maletero -->
-          <line x1="60" y1="40" x2="140" y2="60" stroke="#1a3a5c" stroke-width="1"/>
-          <line x1="60" y1="180" x2="140" y2="160" stroke="#1a3a5c" stroke-width="1"/>
-          <line x1="340" y1="40" x2="260" y2="60" stroke="#1a3a5c" stroke-width="1"/>
-          <line x1="340" y1="180" x2="260" y2="160" stroke="#1a3a5c" stroke-width="1"/>
-          <!-- Ruedas -->
-          <rect x="95" y="24" width="34" height="14" rx="4" fill="#1a3a5c"/>
-          <rect x="95" y="182" width="34" height="14" rx="4" fill="#1a3a5c"/>
-          <rect x="271" y="24" width="34" height="14" rx="4" fill="#1a3a5c"/>
-          <rect x="271" y="182" width="34" height="14" rx="4" fill="#1a3a5c"/>
-          <!-- Espejos -->
-          <rect x="128" y="66" width="10" height="6" fill="#1a3a5c"/>
-          <rect x="128" y="148" width="10" height="6" fill="#1a3a5c"/>
-          <!-- Etiquetas de orientación -->
-          <text x="345" y="115" font-size="11" fill="#888" text-anchor="start">FRENTE</text>
-          <text x="55" y="115" font-size="11" fill="#888" text-anchor="end">ATRÁS</text>
-          <text x="200" y="30" font-size="10" fill="#888" text-anchor="middle">IZQUIERDO</text>
-          <text x="200" y="198" font-size="10" fill="#888" text-anchor="middle">DERECHO</text>
-        </svg>
-      </div>
-
+      <div class="diagrama-wrap"><svg id="diagramaAuto" viewBox="0 0 420 180" role="img" aria-label="Diagrama de vehiculo"></svg></div>
       <ol id="listaDanos" class="lista-danos"></ol>
-
-      <div class="campo">
-        <label for="obs_danos">Observaciones adicionales de daños</label>
-        <textarea id="obs_danos" placeholder="Ej: Rayón profundo, requiere pulido"></textarea>
+    </section>
+    <section>
+      <h2>Observaciones / Entrega / Recepcion</h2>
+      <div class="grid3">
+        <div class="campo"><label for="observaciones">Observaciones</label><textarea id="observaciones"></textarea></div>
+        <div class="campo"><label for="entrega_origen">Entrega origen</label><textarea id="entrega_origen"></textarea></div>
+        <div class="campo"><label for="recepcion_destino">Recepcion destino</label><textarea id="recepcion_destino"></textarea></div>
       </div>
     </section>
-
-    <section>
-      <h2>Entrega del vehículo (origen)</h2>
-      <div class="grid2">
-        <div class="campo"><label for="entrega_origen_nombre">Nombre</label><input id="entrega_origen_nombre" type="text"></div>
-        <div class="campo"><label for="entrega_origen_rut">RUT</label><input id="entrega_origen_rut" type="text"></div>
-        <div class="campo"><label for="entrega_origen_tel">Teléfono</label><input id="entrega_origen_tel" type="tel"></div>
-        <div class="campo"><label for="entrega_origen_fecha">Fecha / Hora</label><input id="entrega_origen_fecha" type="datetime-local"></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Recepción del vehículo (destino)</h2>
-      <div class="grid2">
-        <div class="campo"><label for="recep_nombre">Nombre</label><input id="recep_nombre" type="text"></div>
-        <div class="campo"><label for="recep_rut">RUT</label><input id="recep_rut" type="text"></div>
-        <div class="campo"><label for="recep_tel">Teléfono</label><input id="recep_tel" type="tel"></div>
-        <div class="campo"><label for="recep_fecha">Fecha / Hora</label><input id="recep_fecha" type="datetime-local"></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Declaración</h2>
-      <p id="declaracion_text" class="declaracion" contenteditable="true">
-        El presente documento deja constancia de la prestación del servicio de transporte del vehículo indicado,
-        en las condiciones descritas. Los datos fueron proporcionados por las partes y registrados en forma
-        digital al momento de la entrega. La empresa no se responsabiliza por especies personales no declaradas
-        en este registro.
-      </p>
-    </section>
-
-    <footer class="pie">
-      <strong>JOSETOW</strong> · Asistencia en ruta · Documento generado digitalmente
-    </footer>
-
+    <footer class="pie"><strong>JOSETOW</strong> - Transporte, rescate y asistencia en ruta.</footer>
   </div>
-  
-  <!-- Vista de reporte final (separada) -->
-  <div id="vistaReporte" style="display:none;padding:18px;position:relative;">
-    <button id="btnVolver" style="position:fixed;right:18px;top:84px;z-index:2500;background:#2c4a6e;color:#fff;border:none;padding:10px 12px;border-radius:8px;cursor:pointer">Volver al formulario</button>
-    <div id="reporteFinal" style="width:297mm;min-height:210mm;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:12mm;font-family:inherit;border-radius:6px;">
-      <!-- contenido generado dinámicamente -->
-    </div>
-  </div>
-
+  <div id="vistaReporte"><div class="preview-frame"><div id="reporteFinal"></div></div></div>
 <script>
-function mostrarFoto(input){
-  if(!input.files || !input.files[0]) return;
-  const slot = input.parentElement;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    let img = slot.querySelector('img');
-    if(!img){
-      img = document.createElement('img');
-      slot.insertBefore(img, slot.firstChild);
-    }
-    img.src = e.target.result;
-    const span = slot.querySelector('span');
-    if(span) span.style.display = 'none';
-  };
-  reader.readAsDataURL(input.files[0]);
-}
-
-let contadorDanos = 0;
-const danos = [];
-
-function inicializarDiagrama(){
-  const svg = document.getElementById('diagramaAuto');
-  const lista = document.getElementById('listaDanos');
-
-  svg.addEventListener('click', function(ev){
-    if(ev.target.closest('.marca-dano-grupo')) return;
-
-    const pt = svg.createSVGPoint();
-    pt.x = ev.clientX;
-    pt.y = ev.clientY;
-    const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
-
-    const tipo = prompt('Describe el daño (ej: Rayón, Abolladura, Rotura):');
-    if(!tipo) return;
-
-    contadorDanos++;
-    const idDano = contadorDanos;
-
-    const grupo = document.createElementNS('http://www.w3.org/2000/svg','g');
-    grupo.setAttribute('class','marca-dano-grupo');
-    grupo.setAttribute('data-id', idDano);
-
-    const circulo = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circulo.setAttribute('cx', cursor.x);
-    circulo.setAttribute('cy', cursor.y);
-    circulo.setAttribute('r', 9);
-    circulo.setAttribute('class','marca-dano');
-
-    const texto = document.createElementNS('http://www.w3.org/2000/svg','text');
-    texto.setAttribute('x', cursor.x);
-    texto.setAttribute('y', cursor.y + 3);
-    texto.setAttribute('class','marca-dano-num');
-    texto.textContent = idDano;
-
-    grupo.appendChild(circulo);
-    grupo.appendChild(texto);
-    svg.appendChild(grupo);
-
-    grupo.addEventListener('dblclick', function(e){
-      e.stopPropagation();
-      grupo.remove();
-      const item = lista.querySelector('li[data-id="'+idDano+'"]');
-      if(item) item.remove();
-    });
-
-    const item = document.createElement('li');
-    item.setAttribute('data-id', idDano);
-    item.textContent = idDano + '. ' + tipo;
-    lista.appendChild(item);
+  const fotoIds=[
+    ["foto_origen_frente","FRENTE"],["foto_origen_trasera","TRASERA"],["foto_origen_lat_izq","LAT. IZQ"],["foto_origen_lat_der","LAT. DER"],
+    ["foto_destino_1","FOTO 1"],["foto_destino_2","FOTO 2"]
+  ];
+  const inventario=[
+    ["inv_ruedas","Ruedas"],["inv_radio","Radio"],["inv_tag","TAG"],["inv_llave","Llave"],["inv_documentos","Docs"],
+    ["inv_triangulos","Triangulos"],["inv_gata","Gata"],["inv_llave_ruedas","Llave ruedas"],["inv_extintor","Extintor"],["inv_chaleco","Chaleco"]
+  ];
+  const danos=[];
+  const fotos={};
+  const $=id=>document.getElementById(id);
+  const val=id=>($(id)?.value||"").trim();
+  const textOf=id=>($(id)?.innerText||"").trim();
+  function escapeHTML(value){
+    return String(value||"").replace(/[&<>"']/g, ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+  }
+  function safe(value, fallback="-"){return escapeHTML(value||fallback)}
+  function formatDateLocal(value){
+    if(!value) return "-";
+    const parts=value.split("-");
+    if(parts.length!==3) return escapeHTML(value);
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  function formatDateTimeLocal(value){
+    if(!value) return "-";
+    const [date,time=""]=value.split("T");
+    return `${formatDateLocal(date)} ${escapeHTML(time.slice(0,5))}`.trim();
+  }
+  function mostrarFoto(input){
+    const file=input.files&&input.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=event=>{
+      fotos[input.id]=event.target.result;
+      const slot=input.closest(".foto-slot");
+      const old=slot.querySelector("img");
+      if(old) old.remove();
+      const img=document.createElement("img");
+      img.src=fotos[input.id];
+      img.alt="Foto cargada";
+      slot.appendChild(img);
+      renderReporte();
+    };
+    reader.readAsDataURL(file);
+  }
+  function carSvgContent(){
+    return `
+      <rect x="48" y="74" width="324" height="58" rx="26" fill="#f8fafc" stroke="#94a3b8" stroke-width="3"/>
+      <path d="M112 76 C138 32 282 32 308 76 Z" fill="#eef2f7" stroke="#94a3b8" stroke-width="3"/>
+      <path d="M148 70 L168 44 H214 V70 Z" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M222 44 H268 L286 70 H222 Z" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="122" cy="132" r="22" fill="#1f2937"/><circle cx="122" cy="132" r="10" fill="#cbd5e1"/>
+      <circle cx="298" cy="132" r="22" fill="#1f2937"/><circle cx="298" cy="132" r="10" fill="#cbd5e1"/>
+      <rect x="44" y="92" width="20" height="12" rx="4" fill="#fee2e2"/>
+      <rect x="356" y="92" width="20" height="12" rx="4" fill="#fef3c7"/>
+      <text x="210" y="166" text-anchor="middle" font-size="10" fill="#64748b">Toque sobre el vehiculo para marcar danos</text>`;
+  }
+  function drawInteractiveCar(){
+    const svg=$("diagramaAuto");
+    svg.innerHTML=carSvgContent();
+    danos.forEach((d,i)=>addDamageMarker(svg,d.x,d.y,i+1));
+  }
+  function addDamageMarker(svg,x,y,num){
+    const ns="http://www.w3.org/2000/svg";
+    const g=document.createElementNS(ns,"g");
+    g.setAttribute("data-damage-marker",String(num));
+    const c=document.createElementNS(ns,"circle");
+    c.setAttribute("cx",x);c.setAttribute("cy",y);c.setAttribute("r","11");c.setAttribute("class","marca-dano");
+    const t=document.createElementNS(ns,"text");
+    t.setAttribute("x",x);t.setAttribute("y",Number(y)+3);t.setAttribute("class","marca-dano-num");t.textContent=num;
+    g.append(c,t);svg.appendChild(g);
+  }
+  function renderDamageList(){
+    $("listaDanos").innerHTML=danos.map((d,i)=>`<li>${i+1}. ${safe(d.desc,"Dano visible")}</li>`).join("");
+  }
+  $("diagramaAuto").addEventListener("click",event=>{
+    const svg=event.currentTarget;
+    const pt=svg.createSVGPoint();
+    pt.x=event.clientX;pt.y=event.clientY;
+    const cursor=pt.matrixTransform(svg.getScreenCTM().inverse());
+    const desc=prompt("Descripcion del dano visible:","Rayon / golpe / abolladura");
+    if(desc===null) return;
+    danos.push({x:Math.round(cursor.x),y:Math.round(cursor.y),desc:desc.trim()||"Dano visible"});
+    drawInteractiveCar();renderDamageList();renderReporte();
   });
-}
-
-function limpiarFormulario(){
-  if(!confirm('¿Borrar todos los datos del formulario?')) return;
-  document.querySelectorAll('#hoja input').forEach(el=>{
-    if(el.type === 'checkbox') el.checked = false;
-    else if(el.type !== 'file') el.value = '';
+  $("diagramaAuto").addEventListener("dblclick",()=>{
+    danos.pop();drawInteractiveCar();renderDamageList();renderReporte();
   });
-  document.querySelectorAll('#hoja textarea').forEach(el=> el.value = '');
-  document.querySelectorAll('.foto-slot img').forEach(img=> img.remove());
-  document.querySelectorAll('.foto-slot span').forEach(s=> s.style.display = 'block');
-  document.querySelectorAll('.foto-slot input[type=file]').forEach(f=> f.value = '');
-  document.querySelectorAll('.marca-dano-grupo').forEach(g=> g.remove());
-  document.getElementById('listaDanos').innerHTML = '';
-  contadorDanos = 0;
-}
-
-inicializarDiagrama();
-
-function generarPDF(event, compacto = false){
-  const boton = event.target;
-  const original = boton.textContent;
-  boton.textContent = 'Generando...';
-  boton.disabled = true;
-
-  // Convertir inputs a texto visible para que el PDF los capture bien
-  const hoja = document.getElementById('hoja');
-  const inputs = hoja.querySelectorAll('input:not([type=file]):not([type=checkbox]), textarea');
-  const reemplazos = [];
-
-  inputs.forEach(el=>{
-    const span = document.createElement('span');
-    span.textContent = el.value || '';
-    span.style.display = 'block';
-    span.style.minHeight = '16px';
-    span.style.padding = compacto ? '5px 6px' : '9px 10px';
-    span.style.fontSize = compacto ? '11px' : '14px';
-    span.style.borderBottom = '1px solid #d9dde3';
-    el.style.display = 'none';
-    el.parentNode.insertBefore(span, el);
-    reemplazos.push({el, span});
-  });
-
-  const opciones = {
-    margin: compacto ? [5, 5, 5, 5] : 0,
-    filename: 'RPS_' + (document.querySelector('.rps-cuerpo input').value || 'reporte') + '.pdf',
-    image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: compacto ? 1.2 : 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: compacto ? 'landscape' : 'portrait' },
-    pagebreak: { mode: ['css', 'legacy'] }
-  };
-
-  if(compacto) hoja.classList.add('compact-mode');
-
-  html2pdf().set(opciones).from(hoja).save().then(()=>{
-    reemplazos.forEach(r=>{ r.span.remove(); r.el.style.display = ''; });
-    if(compacto) hoja.classList.remove('compact-mode');
-    boton.textContent = original;
-    boton.disabled = false;
-  }).catch(()=>{
-    reemplazos.forEach(r=>{ r.span.remove(); r.el.style.display = ''; });
-    if(compacto) hoja.classList.remove('compact-mode');
-    boton.textContent = original;
-    boton.disabled = false;
-    alert('Hubo un problema generando el PDF, intenta de nuevo.');
-  });
-}
-
-// --- Funciones para la vista de reporte final ---
-function obtenerDatosReporte(){
-  const pick = id => { const el = document.getElementById(id); if(!el) return '—'; const val = el.value; return (val===undefined || val===null || val==='') ? '—' : val };
-  const formatFecha = (d) => { if(!d || d==='—') return '—'; const dt = new Date(d); if(isNaN(dt)) return '—'; const dd = String(dt.getDate()).padStart(2,'0'); const mm = String(dt.getMonth()+1).padStart(2,'0'); const yyyy = dt.getFullYear(); return dd + '-' + mm + '-' + yyyy };
-  const formatHora = (d) => { if(!d || d==='—') return '—'; const dt = new Date(d); if(isNaN(dt)) return '—'; return String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0') };
-
-  const fotos = (ids) => ids.map(id=>{
-    const input = document.getElementById(id);
-    if(!input) return null;
-    const slot = input.parentElement;
-    const img = slot.querySelector('img');
-    return img && img.src ? img.src : null;
-  });
-
-  const datos = {
-    ot: pick('rps_ot'),
-    expediente: pick('rps_expediente'),
-    fecha_servicio: (function(){ const v = pick('rps_fecha'); return v==='—' ? '—' : (new Date(v).toISOString().slice(0,10)) })(),
-    hora_cierre: pick('rps_hora'),
-    tipo_servicio: pick('tipo_servicio'),
-    mandante: pick('mandante'),
-    cliente: { nombre: pick('cliente_nombre'), rut: pick('cliente_rut'), telefono: pick('cliente_tel') },
-    vehiculo: { patente: pick('veh_patente'), marca: pick('veh_marca'), modelo: pick('veh_modelo'), color: pick('veh_color') },
-    ruta: { desde: pick('ruta_desde'), hasta: pick('ruta_hasta') },
-    unidad: { unidad: pick('unidad_unidad'), marca_modelo: pick('unidad_marca_modelo'), operador: pick('operador_nombre') },
-    timeline: {
-      asignado: { fecha: formatFecha(document.getElementById('timeline_asignado')?.value), hora: formatHora(document.getElementById('timeline_asignado')?.value) },
-      iniciado: { fecha: formatFecha(document.getElementById('timeline_iniciado')?.value), hora: formatHora(document.getElementById('timeline_iniciado')?.value) },
-      ubicado: { fecha: formatFecha(document.getElementById('timeline_ubicado')?.value), hora: formatHora(document.getElementById('timeline_ubicado')?.value) },
-      trasladado: { fecha: formatFecha(document.getElementById('timeline_trasladado')?.value), hora: formatHora(document.getElementById('timeline_trasladado')?.value) },
-      entregado: { fecha: formatFecha(document.getElementById('timeline_entregado')?.value), hora: formatHora(document.getElementById('timeline_entregado')?.value) }
-    },
-    adicionales: pick('adicionales'),
-    fotos_origen: fotos(['foto_origen_frente','foto_origen_trasera','foto_origen_lat_izq','foto_origen_lat_der']),
-    fotos_destino: fotos(['foto_destino_1','foto_destino_2']),
-    inventario: {
-      ruedas: !!document.getElementById('inv_ruedas')?.checked,
-      radio: !!document.getElementById('inv_radio')?.checked,
-      tag: !!document.getElementById('inv_tag')?.checked,
-      llave: !!document.getElementById('inv_llave')?.checked,
-      documentos: !!document.getElementById('inv_documentos')?.checked,
-      triangulos: !!document.getElementById('inv_triangulos')?.checked,
-      gata: !!document.getElementById('inv_gata')?.checked,
-      llave_ruedas: !!document.getElementById('inv_llave_ruedas')?.checked,
-      extintor: !!document.getElementById('inv_extintor')?.checked,
-      chaleco: !!document.getElementById('inv_chaleco')?.checked,
-      pantalla: !!document.getElementById('inv_pantalla')?.checked,
-      neumatico: !!document.getElementById('inv_neumatico')?.checked
-    },
-    observaciones: { base: pick('obs_base'), operador: pick('obs_operador') },
-    danos: (function(){
-      const lista = [];
-      document.querySelectorAll('.marca-dano-grupo').forEach(g=>{
-        const id = g.getAttribute('data-id') || '';
-        const c = g.querySelector('circle');
-        const x = c ? c.getAttribute('cx') : null;
-        const y = c ? c.getAttribute('cy') : null;
-        const li = document.querySelector('#listaDanos li[data-id="'+id+'"]');
-        const tipo = li ? li.textContent.replace(/^\d+\.\s*/,'') : '';
-        lista.push({id, x, y, tipo});
-      });
-      return lista;
-    })(),
-    entrega_origen: { nombre: pick('entrega_origen_nombre'), rut: pick('entrega_origen_rut'), telefono: pick('entrega_origen_tel'), fecha: pick('entrega_origen_fecha') },
-    recepcion_destino: { nombre: pick('recep_nombre'), rut: pick('recep_rut'), telefono: pick('recep_tel'), fecha: pick('recep_fecha') },
-    declaracion: (document.getElementById('declaracion_text')?.textContent || '').trim()
-  };
-
-  // Convert empty strings to '—' consistently
-  const normalize = (v) => (v===null||v===undefined||v==='')? '—' : v;
-  // Normalize nested
-  datos.ot = normalize(datos.ot);
-  datos.vehiculo.patente = normalize(datos.vehiculo.patente);
-  return datos;
-}
-
-function renderizarReporte(datos){
-  const cont = document.getElementById('reporteFinal');
-  // Build HTML using grid 12 columns
-  const fotoMini = datos.fotos_origen[0] || datos.fotos_destino[0] || null;
-  const vehFoto = fotoMini ? '<img class="thumb" src="'+fotoMini+'" alt="foto">' : '<div style="width:100%;height:70px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999">Sin fotografía</div>';
-
-  const timelineItem = (label, item) => `<div style="text-align:center;font-size:10px;"><div style=\"font-weight:700;color:var(--azul-osc)\">${label}</div><div class=\"muted\">${item.fecha==='—'? '—': item.fecha + ' ' + item.hora}</div></div>`;
-
-  // Clone current diagrama (with marks) for the report
-  const diagramaWrap = document.querySelector('.diagrama-wrap');
-  const diagramaHTML = diagramaWrap ? diagramaWrap.outerHTML : '<div style="height:120px;background:#fafbfc;border:1px solid #eee;border-radius:6px"></div>';
-
-  const inventarioHTML = Object.entries(datos.inventario).map(([k,v])=>{
-    return `<div style=\"display:flex;align-items:center;gap:8px;font-size:11px\"><div style=\"width:14px;height:14px;border-radius:50%;background:${v? 'var(--verde)':'#e6e9ee'};flex:0 0 14px\"></div><div style=\"color:#333\">${k.replace(/_/g,' ')}</div></div>`
-  }).join('');
-
-  const fotosOrigenHTML = datos.fotos_origen.map(src=> src ? `<div style=\"width:100%;padding:2px\"><img class=\"thumb\" src=\"${src}\"></div>` : `<div style=\"width:100%;padding:2px\"><div style=\"width:100%;height:70px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999\">Sin fotografía</div></div>`).join('');
-  const fotosDestinoHTML = datos.fotos_destino.map(src=> src ? `<div style=\"width:100%;padding:2px\"><img class=\"thumb\" src=\"${src}\"></div>` : `<div style=\"width:100%;padding:2px\"><div style=\"width:100%;height:70px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#999\">Sin fotografía</div></div>`).join('');
-
-  cont.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-      <div style="display:flex;gap:12px;align-items:center">
-        <div style="width:56px;height:56px;border-radius:8px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">JOSETOW</div>
-        <div>
-          <div style="font-weight:700;color:var(--azul-osc)">JOSETOW</div>
-          <div class="muted">TRANSPORTE · RESCATE · ASISTENCIA EN RUTA</div>
-          <div class="muted">RUT · Teléfono · Dirección</div>
+  function damageSvgForReport(){
+    const markers=danos.map((d,i)=>`<g data-damage-marker="${i+1}"><circle cx="${d.x}" cy="${d.y}" r="11" class="marca-dano"></circle><text x="${d.x}" y="${Number(d.y)+3}" class="marca-dano-num">${i+1}</text></g>`).join("");
+    return `<svg class="damage-svg" viewBox="0 0 420 180" role="img" aria-label="Danos visibles">${carSvgContent()}${markers}</svg>`;
+  }
+  function photoCard(id,label){
+    const src=fotos[id];
+    const img=src?`<img src="${src}" alt="${escapeHTML(label)}">`:`<div class="muted" style="padding:7mm 1mm;text-align:center">Sin foto</div>`;
+    return `<div class="report-photo">${img}<div class="report-photo-label">${escapeHTML(label)}</div></div>`;
+  }
+  function renderReporte(){
+    const origen=fotoIds.slice(0,4).map(([id,label])=>photoCard(id,label)).join("");
+    const destino=fotoIds.slice(4).map(([id,label])=>photoCard(id,label)).join("");
+    const vehThumb=fotos.foto_origen_frente?`<img class="vehicle-thumb" src="${fotos.foto_origen_frente}" alt="Miniatura vehiculo">`:`<div class="vehicle-thumb"></div>`;
+    const inv=inventario.map(([id,label])=>{
+      const ok=$(id).checked;
+      return `<div class="inventory-item"><span class="inventory-icon ${ok?"checked":"unchecked"}">${ok?"✓":"-"}</span><span>${escapeHTML(label)}</span></div>`;
+    }).join("");
+    const damageItems=danos.length?danos.map((d,i)=>`<li>${i+1}. ${safe(d.desc,"Dano visible")}</li>`).join(""):`<li>Sin danos informados</li>`;
+    $("reporteFinal").innerHTML=`
+      <div class="report-header">
+        <div class="brand-box">
+          <div class="brand-mark">JT</div>
+          <div><div class="brand-title">${safe(textOf("empresa_nombre"),"JOSETOW")}</div><div class="brand-sub">${safe(textOf("empresa_subtitulo"),"TRANSPORTE · RESCATE · ASISTENCIA EN RUTA")}</div><div class="muted">${safe(textOf("empresa_contacto"),"RUT / Telefono")}</div><div class="muted">${safe(textOf("empresa_direccion"),"Direccion")}</div></div>
         </div>
+        <div class="rps-card"><div class="rps-card-title">REPORTE DE PRESTACION DE SERVICIO</div><div class="rps-meta">
+          <div><div class="muted">OT / RPS</div><div class="text-sm"><b>${safe(val("rps_ot"))}</b></div></div>
+          <div><div class="muted">Expediente</div><div class="text-sm">${safe(val("rps_expediente"))}</div></div>
+          <div><div class="muted">Fecha servicio</div><div class="text-sm">${formatDateLocal(val("rps_fecha"))}</div></div>
+          <div><div class="muted">Hora cierre</div><div class="text-sm">${safe(val("rps_hora"))}</div></div>
+        </div></div>
       </div>
-      <div style="text-align:right">
-        <div style="font-weight:700;background:var(--azul-osc);color:#fff;padding:6px 10px;border-radius:6px">REPORTE DE PRESTACIÓN DE SERVICIO</div>
-        <div style="margin-top:6px;font-size:12px"><strong>OT:</strong> ${datos.ot}</div>
-        <div style="font-size:12px"><strong>Expediente:</strong> ${datos.expediente}</div>
-        <div style="font-size:12px"><strong>Fecha:</strong> ${datos.fecha_servicio==='—' ? '—' : formatDateForDisplay(datos.fecha_servicio)}</div>
-        <div style="font-size:12px"><strong>Hora cierre:</strong> ${datos.hora_cierre || '—'}</div>
+      <div class="grid">
+        <div class="card span3"><div class="card-title">Tipo de servicio</div><div class="text-sm">${safe(val("tipo_servicio"))}</div><div class="muted">${safe(val("mandante"),"Mandante no informado")}</div></div>
+        <div class="card span4"><div class="card-title">Cliente</div><div class="text-sm"><b>${safe(val("cliente_nombre"))}</b></div><div class="muted">RUT: ${safe(val("cliente_rut"))}</div><div class="muted">Tel: ${safe(val("cliente_tel"))}</div></div>
+        <div class="card span5"><div class="card-title">Vehiculo</div><div class="vehicle-card"><div class="text-sm"><b>${safe(val("veh_patente"))}</b><br>${safe(val("veh_marca"))} ${safe(val("veh_modelo"))}<br><span class="muted">Color: ${safe(val("veh_color"))} · KM: ${safe(val("veh_km"))}</span></div>${vehThumb}</div></div>
+        <div class="card span6"><div class="card-title">Ruta del servicio</div><div class="text-sm"><b>Desde:</b> ${safe(val("ruta_desde"))}</div><div class="text-sm"><b>Hasta:</b> ${safe(val("ruta_hasta"))}</div></div>
+        <div class="card span4"><div class="card-title">Unidad / Operador</div><div class="text-sm">${safe(val("unidad_unidad"))} · ${safe(val("unidad_marca_modelo"))}</div><div class="muted">Operador: ${safe(val("operador_nombre"))}</div></div>
+        <div class="card span2"><div class="card-title">Adicionales</div><div class="text-sm">${safe(val("adicionales"))}</div></div>
+        <div class="card span12"><div class="card-title">Timeline</div><div class="timeline-row">
+          ${["asignado","iniciado","ubicado","trasladado","entregado"].map(k=>`<div class="timeline-step"><div class="label">${k}</div><div class="value">${formatDateTimeLocal(val("timeline_"+k))}</div></div>`).join("")}
+        </div></div>
+        <div class="card span8"><div class="card-title">Evidencia en origen</div><div class="photos">${origen}</div></div>
+        <div class="card span4"><div class="card-title">Evidencia en destino</div><div class="photos two">${destino}</div></div>
+        <div class="card span12"><div class="card-title">Inventario accesorios</div><div class="inventory-grid">${inv}</div></div>
+        <div class="card span5"><div class="card-title">Observaciones</div><div class="text-sm">${safe(val("observaciones"),"Sin observaciones")}</div></div>
+        <div class="card span7"><div class="card-title">Danos visibles</div><div class="damage-area">${damageSvgForReport()}<ol class="damage-list">${damageItems}</ol></div></div>
+        <div class="card span4"><div class="card-title">Entrega origen</div><div class="text-sm">${safe(val("entrega_origen"))}</div></div>
+        <div class="card span4"><div class="card-title">Recepcion destino</div><div class="text-sm">${safe(val("recepcion_destino"))}</div></div>
+        <div class="card span4"><div class="card-title">Declaracion</div><div class="muted">El presente reporte registra estado, traslado, inventario, evidencia fotografica y danos visibles informados durante la prestacion del servicio. Costo de plataforma: $0.</div></div>
       </div>
-    </div>
-
-    <div class="grid" style="margin-bottom:8px">
-      <div class="card" style="grid-column:span 3"> <div style="font-weight:700">Tipo de servicio</div><div class="muted">${datos.tipo_servicio}</div><hr><div style="font-weight:700">Mandante</div><div class="muted">${datos.mandante}</div></div>
-      <div class="card" style="grid-column:span 4"> <div style="font-weight:700">Cliente</div><div class="muted">${datos.cliente.nombre} · ${datos.cliente.rut} · ${datos.cliente.telefono}</div></div>
-      <div class="card" style="grid-column:span 5"> <div style="font-weight:700">Vehículo</div><div class="muted">${datos.vehiculo.patente} · ${datos.vehiculo.marca} ${datos.vehiculo.modelo} · ${datos.vehiculo.color}</div><div style="margin-top:6px">${vehFoto}</div></div>
-    </div>
-
-    <div class="grid" style="margin-bottom:8px">
-      <div class="card" style="grid-column:span 6"><div style="font-weight:700">Ruta del servicio</div><div class="muted">${datos.ruta.desde} → ${datos.ruta.hasta}</div></div>
-      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Unidad / Operador</div><div class="muted">${datos.unidad.unidad} · ${datos.unidad.marca_modelo} · ${datos.unidad.operador}</div></div>
-      <div class="card" style="grid-column:span 2"><div style="font-weight:700">Adicionales</div><div class="muted">${datos.adicionales}</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:8px;grid-column:span 12"> <div style="font-weight:700;margin-bottom:6px">Timeline del servicio</div>
-      <div style="display:flex;gap:12px;justify-content:space-between">${timelineItem('Asignado',datos.timeline.asignado)}${timelineItem('Iniciado',datos.timeline.iniciado)}${timelineItem('Ubicado',datos.timeline.ubicado)}${timelineItem('Trasladado',datos.timeline.trasladado)}${timelineItem('Entregado',datos.timeline.entregado)}</div>
-    </div>
-
-    <div class="grid" style="margin-bottom:8px">
-      <div class="card" style="grid-column:span 8"><div style="font-weight:700;margin-bottom:6px">Evidencia en origen</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${fotosOrigenHTML}</div></div>
-      <div class="card" style="grid-column:span 4"><div style="font-weight:700;margin-bottom:6px">Evidencia en destino</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">${fotosDestinoHTML}</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:8px;grid-column:span 12"> <div style="font-weight:700">Inventario accesorios</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px">${inventarioHTML}</div></div>
-
-    <div class="grid" style="margin-bottom:8px">
-      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Observaciones</div><div class="muted">${datos.observaciones.base}<br><strong>Operador:</strong> ${datos.observaciones.operador}</div></div>
-      <div class="card" style="grid-column:span 8"><div style="font-weight:700">Daños visibles</div>${diagramaHTML}</div>
-    </div>
-
-    <div class="grid" style="margin-bottom:8px">
-      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Entrega del vehículo (origen)</div><div class="muted">${datos.entrega_origen.nombre} · ${datos.entrega_origen.rut} · ${datos.entrega_origen.telefono} · ${datos.entrega_origen.fecha}</div></div>
-      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Recepción del vehículo (destino)</div><div class="muted">${datos.recepcion_destino.nombre} · ${datos.recepcion_destino.rut} · ${datos.recepcion_destino.telefono} · ${datos.recepcion_destino.fecha}</div></div>
-      <div class="card" style="grid-column:span 4"><div style="font-weight:700">Declaración</div><div class="muted">${datos.declaracion}</div></div>
-    </div>
-
-    <div style="text-align:center;font-size:11px;color:#666;margin-top:8px">
-      <div><strong>JOSETOW</strong> · Asistencia en ruta · Documento generado digitalmente</div>
-      <div>Generado: ${new Date().toLocaleString()}</div>
-    </div>
-  `;
-}
-
-function formatDateForDisplay(isoDate){ if(!isoDate || isoDate==='—') return '—'; const d = new Date(isoDate); if(isNaN(d)) return '—'; return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear(); }
-
-function mostrarFormulario(){ document.getElementById('vistaReporte').style.display='none'; document.getElementById('hoja').style.display='block'; }
-
-function mostrarVistaPrevia(){ const datos = obtenerDatosReporte(); renderizarReporte(datos); document.getElementById('hoja').style.display='none'; document.getElementById('vistaReporte').style.display='flex'; }
-
-async function generarPDFFinal(event){ const btn = event?.target || document.getElementById('btnGenerarPDF'); const original = btn.textContent; try{ btn.textContent='Generando PDF…'; btn.disabled=true; mostrarVistaPrevia(); const sheet = document.getElementById('reporteFinal'); // wait images
-    const imgs = Array.from(sheet.querySelectorAll('img')); await Promise.all(imgs.map(img=>{ if(img.complete) return Promise.resolve(); return new Promise(res=>{ img.onload=res; img.onerror=res; }) }));
-    const datos = obtenerDatosReporte();
-    const filename = `RPS_${datos.ot || 'reporte'}_${datos.vehiculo.patente || 'NA'}_${datos.fecha_servicio || ''}.pdf`;
-    const opciones = { margin: [6,6,6,6], filename, image:{type:'jpeg',quality:0.95}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}, pagebreak:{mode:['css','legacy']} };
-    await html2pdf().set(opciones).from(sheet).save();
-  }catch(e){ console.error(e); alert('Error generando PDF final'); }
-  finally{ btn.textContent=original; btn.disabled=false; }
-}
-
-// Registrar controladores
-window.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('btnFormulario').addEventListener('click', mostrarFormulario);
-  document.getElementById('btnVistaPrevia').addEventListener('click', mostrarVistaPrevia);
-  document.getElementById('btnGenerarPDF').addEventListener('click', generarPDFFinal);
-  const volver = document.getElementById('btnVolver');
-  if(volver) volver.addEventListener('click', ()=>{ mostrarFormulario(); window.scrollTo({top:0,behavior:'smooth'}); });
-});
+      <div class="footer-note"><b>JOSETOW</b> - Servicio 24/7 · Transporte · Rescate · Asistencia en ruta</div>`;
+  }
+  function ajustarEscalaVistaPrevia(){
+    const vista=$("vistaReporte");
+    const hoja=$("reporteFinal");
+    if(!vista.classList.contains("activa")) return;
+    hoja.style.transform="none";
+    const anchoReal=hoja.offsetWidth;
+    const altoReal=hoja.offsetHeight;
+    const disponible=Math.max(260,vista.clientWidth-24);
+    const escala=Math.min(1,disponible/anchoReal);
+    hoja.style.transform=`scale(${escala})`;
+    vista.style.height=`${Math.ceil(altoReal*escala+30)}px`;
+  }
+  function mostrarFormulario(){
+    $("hoja").classList.remove("oculta");$("formActions").classList.remove("oculta");$("vistaReporte").classList.remove("activa");
+  }
+  function mostrarVistaPrevia(){
+    renderReporte();$("hoja").classList.add("oculta");$("formActions").classList.add("oculta");$("vistaReporte").classList.add("activa");ajustarEscalaVistaPrevia();
+  }
+  async function generarPDF(){
+    renderReporte();
+    const btn=$("btnGenerarPDF");
+    btn.disabled=true;btn.textContent="Generando...";
+    const previo=$("vistaReporte").classList.contains("activa");
+    document.body.classList.add("pdf-mode");
+    $("vistaReporte").classList.add("activa");
+    $("reporteFinal").style.transform="none";
+    const ot=val("rps_ot")||"RPS";
+    const opt={margin:0,filename:`${ot.replace(/[^\w-]+/g,"_")}_JOSETOW.pdf`,image:{type:"jpeg",quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:[]}};
+    try{await html2pdf().set(opt).from($("reporteFinal")).save();}
+    finally{
+      document.body.classList.remove("pdf-mode");
+      btn.disabled=false;btn.textContent="Generar PDF";
+      if(!previo) mostrarFormulario(); else ajustarEscalaVistaPrevia();
+    }
+  }
+  function limpiarFormulario(){
+    if(!confirm("¿Limpiar el formulario completo?")) return;
+    document.querySelectorAll("input,textarea").forEach(el=>{if(el.type==="checkbox")el.checked=false;else if(el.type==="file")el.value="";else el.value="";});
+    document.querySelectorAll(".foto-slot img").forEach(img=>img.remove());
+    Object.keys(fotos).forEach(k=>delete fotos[k]);
+    danos.length=0;drawInteractiveCar();renderDamageList();renderReporte();
+  }
+  $("btnFormulario").addEventListener("click",mostrarFormulario);
+  $("btnVistaPrevia").addEventListener("click",mostrarVistaPrevia);
+  $("btnGenerarPDF").addEventListener("click",generarPDF);
+  window.addEventListener("resize",ajustarEscalaVistaPrevia);
+  document.querySelectorAll("input,textarea,[contenteditable=true]").forEach(el=>el.addEventListener("input",renderReporte));
+  drawInteractiveCar();renderReporte();
 </script>
-
 </body>
 </html>

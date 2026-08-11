@@ -65,6 +65,7 @@
   footer.pie{padding:14px 16px;text-align:center;color:#64748b;font-size:10px}
   #vistaReporte{display:none;background:#eef2f6;min-height:100vh;justify-content:center;align-items:flex-start;padding:12px;overflow-x:hidden}
   #vistaReporte.activa{display:flex}
+  body.preview-on .toolbar{display:none}
   #hoja.oculta{display:none}
   #formActions.oculta{display:none}
   .preview-frame{position:relative;width:100%;display:flex;justify-content:center}
@@ -153,6 +154,49 @@
   #reporteFinal .damage-svg{height:250px;display:block;margin:0 auto 4px}
   #reporteFinal .damage-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:0;padding-left:18px;font-size:10px}
   #reporteFinal .declaration-band{border-top:1px solid #dfe5ec;margin-top:8px;padding:6px 10px;color:#475569;font-size:8px;line-height:1.15;text-align:left}
+  /* Reporte final reconstruido desde cero: legible al verlo desde telefono */
+  #reporteFinal.final-v2{width:794px;height:1123px;min-height:1123px;padding:28px;background:#fff;color:#13243a;letter-spacing:0}
+  #reporteFinal.final-v2 *{box-sizing:border-box;letter-spacing:0;word-break:normal;overflow-wrap:break-word}
+  #reporteFinal.final-v2 .v2-header{display:grid;grid-template-columns:1fr 230px;gap:14px;align-items:stretch;margin-bottom:10px}
+  #reporteFinal.final-v2 .v2-brand{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;border-bottom:3px solid var(--azul);padding-bottom:8px}
+  #reporteFinal.final-v2 .v2-mark{width:52px;height:52px;border-radius:9px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900}
+  #reporteFinal.final-v2 .v2-company{font-size:26px;line-height:1;font-weight:900;color:var(--azul-osc)}
+  #reporteFinal.final-v2 .v2-sub{font-size:11px;line-height:1.1;color:var(--rojo);font-weight:900;margin-top:4px}
+  #reporteFinal.final-v2 .v2-muted{font-size:10.5px;line-height:1.12;color:#526174}
+  #reporteFinal.final-v2 .v2-rps{border:1px solid #d7dee8;border-radius:10px;overflow:hidden}
+  #reporteFinal.final-v2 .v2-rps-title{background:var(--azul-osc);color:#fff;text-align:center;font-size:11px;font-weight:900;padding:6px}
+  #reporteFinal.final-v2 .v2-rps-body{display:grid;grid-template-columns:.75fr 1.15fr .7fr;gap:5px;padding:9px}
+  #reporteFinal.final-v2 .v2-label{font-size:9px;line-height:1.05;color:#526174;font-weight:800;text-transform:uppercase}
+  #reporteFinal.final-v2 .v2-value{font-size:9px;line-height:1.08;color:#13243a;font-weight:800;margin-top:2px;white-space:nowrap}
+  #reporteFinal.final-v2 .v2-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #reporteFinal.final-v2 .v2-card{border:1px solid #dfe5ec;border-radius:9px;padding:9px;background:#fff;min-height:0;overflow:hidden}
+  #reporteFinal.final-v2 .v2-title{font-size:11px;line-height:1.05;color:var(--azul-osc);font-weight:900;text-transform:uppercase;margin-bottom:6px}
+  #reporteFinal.final-v2 .v2-text{font-size:12px;line-height:1.15;color:#13243a}
+  #reporteFinal.final-v2 .v2-small{font-size:10.5px;line-height:1.12;color:#526174}
+  #reporteFinal.final-v2 .v2-service{min-height:78px}
+  #reporteFinal.final-v2 .v2-route{min-height:62px}
+  #reporteFinal.final-v2 .v2-wide{grid-column:1 / -1}
+  #reporteFinal.final-v2 .v2-timeline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #reporteFinal.final-v2 .v2-step{border:1px solid #dfe5ec;border-radius:8px;text-align:center;padding:7px}
+  #reporteFinal.final-v2 .v2-step b{display:block;font-size:11px;text-transform:uppercase}
+  #reporteFinal.final-v2 .v2-step span{font-size:10.5px;color:#526174}
+  #reporteFinal.final-v2 .v2-evidence{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}
+  #reporteFinal.final-v2 .v2-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  #reporteFinal.final-v2 .v2-photos.two{grid-template-columns:repeat(2,1fr)}
+  #reporteFinal.final-v2 .report-photo{height:82px;border-radius:8px}
+  #reporteFinal.final-v2 .report-photo-label{font-size:9px;padding:4px}
+  #reporteFinal.final-v2 .v2-inventory{display:grid;grid-template-columns:repeat(4,1fr);gap:5px 10px}
+  #reporteFinal.final-v2 .inventory-item{font-size:10.5px;line-height:1.05;gap:5px}
+  #reporteFinal.final-v2 .inventory-icon{width:17px;height:17px;font-size:10px}
+  #reporteFinal.final-v2 .v2-damage{min-height:244px}
+  #reporteFinal.final-v2 .v2-damage-layout{display:block}
+  #reporteFinal.final-v2 .damage-svg{height:190px;width:100%;display:block;margin:0 auto}
+  #reporteFinal.final-v2 .damage-list{font-size:10.5px;line-height:1.15;margin:4px 0 0;padding-left:18px;display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
+  #reporteFinal.final-v2 .v2-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  #reporteFinal.final-v2 .v2-bottom .v2-card{min-height:86px}
+  #reporteFinal.final-v2 .v2-bottom .v2-title{font-size:10px}
+  #reporteFinal.final-v2 .v2-declaration{margin-top:8px;border-top:1px solid #dfe5ec;padding-top:6px;font-size:9.5px;line-height:1.12;color:#526174}
+  #reporteFinal.final-v2 .v2-footer{text-align:center;border-top:1px solid #dfe5ec;margin-top:5px;padding-top:5px;font-size:9px;color:#526174}
   .pdf-mode #reporteFinal{box-shadow:none;transform:none!important}
   @media (max-width:700px){
     .grid2,.grid3,.timeline,.inventario{grid-template-columns:1fr}
@@ -420,6 +464,114 @@
       <div class="declaration-band"><b>Declaracion:</b> El presente reporte registra estado, traslado, inventario, evidencia fotografica y danos visibles informados durante la prestacion del servicio. Costo de plataforma: $0.</div>
       <div class="footer-note"><b>JOSETOW</b> - Servicio 24/7 · Transporte · Rescate · Asistencia en ruta</div>`;
   }
+  function renderReporte(){
+    const origen=fotoIds.slice(0,4).map(([id,label])=>photoCard(id,label)).join("");
+    const destino=fotoIds.slice(4).map(([id,label])=>photoCard(id,label)).join("");
+    const inv=inventario.map(([id,label])=>{
+      const ok=$(id).checked;
+      return `<div class="inventory-item"><span class="inventory-icon ${ok?"checked":"unchecked"}">${ok?"✓":"-"}</span><span>${escapeHTML(label)}</span></div>`;
+    }).join("");
+    const damageItems=danos.length?danos.map(d=>`<li>${safe(d.desc,"Dano visible")}</li>`).join(""):`<li>Sin danos informados</li>`;
+    $("reporteFinal").className="final-v2";
+    $("reporteFinal").innerHTML=`
+      <div class="v2-header">
+        <div class="v2-brand">
+          <div class="v2-mark">JT</div>
+          <div>
+            <div class="v2-company">${safe(textOf("empresa_nombre"),"JOSETOW")}</div>
+            <div class="v2-sub">${safe(textOf("empresa_subtitulo"),"TRANSPORTE - RESCATE - ASISTENCIA EN RUTA")}</div>
+            <div class="v2-muted">${safe(textOf("empresa_contacto"),"RUT / Telefono")}</div>
+            <div class="v2-muted">${safe(textOf("empresa_direccion"),"Direccion")}</div>
+          </div>
+        </div>
+        <div class="v2-rps">
+          <div class="v2-rps-title">RPS</div>
+          <div class="v2-rps-body">
+            <div><div class="v2-label">OT</div><div class="v2-value">${safe(val("rps_ot"))}</div></div>
+            <div><div class="v2-label">Fecha</div><div class="v2-value">${formatDateLocal(val("rps_fecha"))}</div></div>
+            <div><div class="v2-label">Hora</div><div class="v2-value">${safe(val("rps_hora"))}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="v2-grid">
+        <div class="v2-card v2-service">
+          <div class="v2-title">Servicio y cliente</div>
+          <div class="v2-text"><b>${safe(val("tipo_servicio"),"Traslado")}</b></div>
+          <div class="v2-small">Mandante: ${safe(val("mandante"),"No informado")}</div>
+          <div class="v2-text" style="margin-top:6px"><b>${safe(val("cliente_nombre"))}</b></div>
+          <div class="v2-small">RUT: ${safe(val("cliente_rut"))} - Tel: ${safe(val("cliente_tel"))}</div>
+        </div>
+        <div class="v2-card v2-service">
+          <div class="v2-title">Vehiculo</div>
+          <div class="v2-text"><b>${safe(val("veh_patente"))}</b> - ${safe(val("veh_marca"))} ${safe(val("veh_modelo"))}</div>
+          <div class="v2-small">Color: ${safe(val("veh_color"))} - KM: ${safe(val("veh_km"))}</div>
+        </div>
+
+        <div class="v2-card v2-route">
+          <div class="v2-title">Ruta</div>
+          <div class="v2-text"><b>Desde:</b> ${safe(val("ruta_desde"))}</div>
+          <div class="v2-text"><b>Hasta:</b> ${safe(val("ruta_hasta"))}</div>
+        </div>
+        <div class="v2-card v2-route">
+          <div class="v2-title">Unidad / Operador</div>
+          <div class="v2-text">${safe(val("unidad_unidad"))} - ${safe(val("unidad_marca_modelo"))}</div>
+          <div class="v2-small">Operador: ${safe(val("operador_nombre"))}</div>
+          <div class="v2-small">Adicionales: ${safe(val("adicionales"))}</div>
+        </div>
+
+        <div class="v2-card v2-wide">
+          <div class="v2-title">Timeline</div>
+          <div class="v2-timeline">
+            <div class="v2-step"><b>Iniciado</b><span>${formatDateTimeLocal(val("timeline_iniciado"))}</span></div>
+            <div class="v2-step"><b>Entregado</b><span>${formatDateTimeLocal(val("timeline_entregado"))}</span></div>
+          </div>
+        </div>
+
+        <div class="v2-card v2-wide">
+          <div class="v2-title">Evidencia fotografica</div>
+          <div class="v2-evidence">
+            <div class="v2-photos">${origen}</div>
+            <div class="v2-photos two">${destino}</div>
+          </div>
+        </div>
+
+        <div class="v2-card v2-wide">
+          <div class="v2-title">Inventario accesorios</div>
+          <div class="v2-inventory">${inv}</div>
+        </div>
+
+        <div class="v2-card v2-wide v2-damage">
+          <div class="v2-title">Danos visibles</div>
+          <div class="v2-damage-layout">
+            ${damageSvgForReport()}
+            <ol class="damage-list">${damageItems}</ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="v2-bottom">
+        <div class="v2-card">
+          <div class="v2-title">Obs.</div>
+          <div class="v2-text">${safe(val("observaciones"),"Sin observaciones")}</div>
+        </div>
+        <div class="v2-card">
+          <div class="v2-title">Entrega</div>
+          <div class="v2-text"><b>Nombre:</b> ${safe(val("entrega_nombre"))}</div>
+          <div class="v2-text"><b>RUT:</b> ${safe(val("entrega_rut"))}</div>
+          <div class="v2-text"><b>Telefono:</b> ${safe(val("entrega_tel"))}</div>
+        </div>
+        <div class="v2-card">
+          <div class="v2-title">Recepcion</div>
+          <div class="v2-text"><b>Nombre:</b> ${safe(val("recepcion_nombre"))}</div>
+          <div class="v2-text"><b>RUT:</b> ${safe(val("recepcion_rut"))}</div>
+          <div class="v2-text"><b>Telefono:</b> ${safe(val("recepcion_tel"))}</div>
+        </div>
+      </div>
+
+      <div class="v2-declaration"><b>Declaracion:</b> El presente reporte registra estado, traslado, inventario, evidencia fotografica y danos visibles informados durante la prestacion del servicio. Costo de plataforma: $0.</div>
+      <div class="v2-footer"><b>JOSETOW</b> - Servicio 24/7 - Transporte - Rescate - Asistencia en ruta</div>`;
+  }
   function ajustarEscalaVistaPrevia(){
     const vista=$("vistaReporte");
     const hoja=$("reporteFinal");
@@ -433,10 +585,10 @@
     vista.style.height=`${Math.ceil(altoReal*escala+30)}px`;
   }
   function mostrarFormulario(){
-    $("hoja").classList.remove("oculta");$("formActions").classList.remove("oculta");$("vistaReporte").classList.remove("activa");
+    document.body.classList.remove("preview-on");$("hoja").classList.remove("oculta");$("formActions").classList.remove("oculta");$("vistaReporte").classList.remove("activa");
   }
   function mostrarVistaPrevia(){
-    renderReporte();$("hoja").classList.add("oculta");$("formActions").classList.add("oculta");$("vistaReporte").classList.add("activa");ajustarEscalaVistaPrevia();
+    renderReporte();document.body.classList.add("preview-on");$("hoja").classList.add("oculta");$("formActions").classList.add("oculta");$("vistaReporte").classList.add("activa");ajustarEscalaVistaPrevia();
   }
   async function generarPDF(){
     renderReporte();

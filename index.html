@@ -106,7 +106,7 @@
   /* Plantilla PDF estable: evita que Safari/iPhone parta palabras o ensanche columnas */
   #reporteFinal{width:794px;height:1123px;min-height:1123px;padding:24px;letter-spacing:0}
   #reporteFinal *{letter-spacing:0;word-break:normal;overflow-wrap:normal}
-  #reporteFinal .report-header{grid-template-columns:1.35fr .9fr;gap:18px;margin-bottom:12px}
+  #reporteFinal .report-header{grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:12px}
   #reporteFinal .brand-box{gap:12px;padding-bottom:10px}
   #reporteFinal .brand-mark{width:48px;height:48px;border-radius:8px;font-size:25px}
   #reporteFinal .brand-title{font-size:24px;line-height:1}
@@ -116,9 +116,9 @@
   #reporteFinal .rps-meta{gap:7px;padding:9px;grid-template-columns:repeat(3,minmax(0,1fr))}
   #reporteFinal .grid{gap:8px;grid-template-columns:repeat(12,minmax(0,1fr))}
   #reporteFinal .card{border-radius:8px;padding:8px;overflow:hidden}
-  #reporteFinal .card-title{font-size:9px;line-height:1.08;margin-bottom:6px;letter-spacing:0;white-space:normal}
-  #reporteFinal .text-sm{font-size:10px;line-height:1.18;overflow-wrap:break-word}
-  #reporteFinal .muted,#reporteFinal .text-muted{font-size:8.5px;line-height:1.15;overflow-wrap:break-word}
+  #reporteFinal .card-title{font-size:8.5px;line-height:1.08;margin-bottom:6px;letter-spacing:0;white-space:normal}
+  #reporteFinal .text-sm{font-size:9.5px;line-height:1.16;overflow-wrap:break-word}
+  #reporteFinal .muted,#reporteFinal .text-muted{font-size:8px;line-height:1.15;overflow-wrap:break-word}
   #reporteFinal .vehicle-card{grid-template-columns:minmax(0,1fr) 94px;gap:8px}
   #reporteFinal .vehicle-thumb{width:94px;height:62px;border-radius:6px}
   #reporteFinal .timeline-row{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -137,22 +137,22 @@
   #reporteFinal .footer-note{font-size:8px;line-height:1.2;margin-top:8px;padding-top:6px}
   #reporteFinal .grid .card:nth-child(1),
   #reporteFinal .grid .card:nth-child(2),
-  #reporteFinal .grid .card:nth-child(3){min-height:112px}
+  #reporteFinal .grid .card:nth-child(3){min-height:104px}
   #reporteFinal .grid .card:nth-child(4),
-  #reporteFinal .grid .card:nth-child(5),
+  #reporteFinal .grid .card:nth-child(5){min-height:76px}
   #reporteFinal .grid .card:nth-child(6){min-height:76px}
-  #reporteFinal .grid .card:nth-child(7){min-height:86px}
-  #reporteFinal .grid .card:nth-child(8),
-  #reporteFinal .grid .card:nth-child(9){min-height:156px}
-  #reporteFinal .grid .card:nth-child(10){min-height:80px}
-  #reporteFinal .grid .card:nth-child(11),
-  #reporteFinal .grid .card:nth-child(12){min-height:248px}
-  #reporteFinal .grid .card:nth-child(13),
-  #reporteFinal .grid .card:nth-child(14){min-height:112px}
+  #reporteFinal .grid .card:nth-child(7),
+  #reporteFinal .grid .card:nth-child(8){min-height:166px}
+  #reporteFinal .grid .card:nth-child(9){min-height:74px}
+  #reporteFinal .grid .card:nth-child(10),
+  #reporteFinal .grid .card:nth-child(11){min-height:274px}
+  #reporteFinal .grid .card:nth-child(12),
+  #reporteFinal .grid .card:nth-child(13){min-height:112px}
   #reporteFinal .report-photo{height:98px}
-  #reporteFinal .damage-area{grid-template-columns:1.5fr .85fr}
-  #reporteFinal .damage-svg{height:190px}
-  #reporteFinal .declaration-band{border-top:1px solid #dfe5ec;margin-top:8px;padding:8px 10px;color:#475569;font-size:9px;line-height:1.2;text-align:left}
+  #reporteFinal .damage-area{display:block}
+  #reporteFinal .damage-svg{height:220px;display:block;margin:0 auto 4px}
+  #reporteFinal .damage-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:0;padding-left:18px}
+  #reporteFinal .declaration-band{border-top:1px solid #dfe5ec;margin-top:8px;padding:6px 10px;color:#475569;font-size:8px;line-height:1.15;text-align:left}
   .pdf-mode #reporteFinal{box-shadow:none;transform:none!important}
   @media (max-width:700px){
     .grid2,.grid3,.timeline,.inventario{grid-template-columns:1fr}
@@ -394,10 +394,10 @@
           <div class="brand-mark">JT</div>
           <div><div class="brand-title">${safe(textOf("empresa_nombre"),"JOSETOW")}</div><div class="brand-sub">${safe(textOf("empresa_subtitulo"),"TRANSPORTE · RESCATE · ASISTENCIA EN RUTA")}</div><div class="muted">${safe(textOf("empresa_contacto"),"RUT / Telefono")}</div><div class="muted">${safe(textOf("empresa_direccion"),"Direccion")}</div></div>
         </div>
-        <div class="rps-card"><div class="rps-card-title">REPORTE DE PRESTACION DE SERVICIO</div><div class="rps-meta">
+        <div class="rps-card"><div class="rps-card-title">REPORTE DE SERVICIO</div><div class="rps-meta">
           <div><div class="muted">OT</div><div class="text-sm"><b>${safe(val("rps_ot"))}</b></div></div>
-          <div><div class="muted">Fecha servicio</div><div class="text-sm">${formatDateLocal(val("rps_fecha"))}</div></div>
-          <div><div class="muted">Hora cierre</div><div class="text-sm">${safe(val("rps_hora"))}</div></div>
+          <div><div class="muted">Fecha</div><div class="text-sm">${formatDateLocal(val("rps_fecha"))}</div></div>
+          <div><div class="muted">Hora</div><div class="text-sm">${safe(val("rps_hora"))}</div></div>
         </div></div>
       </div>
       <div class="grid">
@@ -405,8 +405,7 @@
         <div class="card span4"><div class="card-title">Cliente</div><div class="text-sm"><b>${safe(val("cliente_nombre"))}</b></div><div class="muted">RUT: ${safe(val("cliente_rut"))}</div><div class="muted">Tel: ${safe(val("cliente_tel"))}</div></div>
         <div class="card span5"><div class="card-title">Vehiculo</div><div class="text-sm"><b>${safe(val("veh_patente"))}</b><br>${safe(val("veh_marca"))} ${safe(val("veh_modelo"))}<br><span class="muted">Color: ${safe(val("veh_color"))} · KM: ${safe(val("veh_km"))}</span></div></div>
         <div class="card span6"><div class="card-title">Ruta del servicio</div><div class="text-sm"><b>Desde:</b> ${safe(val("ruta_desde"))}</div><div class="text-sm"><b>Hasta:</b> ${safe(val("ruta_hasta"))}</div></div>
-        <div class="card span4"><div class="card-title">Unidad / Operador</div><div class="text-sm">${safe(val("unidad_unidad"))} · ${safe(val("unidad_marca_modelo"))}</div><div class="muted">Operador: ${safe(val("operador_nombre"))}</div></div>
-        <div class="card span2"><div class="card-title">Adicionales</div><div class="text-sm">${safe(val("adicionales"))}</div></div>
+        <div class="card span6"><div class="card-title">Unidad / Operador / Adicionales</div><div class="text-sm">${safe(val("unidad_unidad"))} · ${safe(val("unidad_marca_modelo"))}</div><div class="muted">Operador: ${safe(val("operador_nombre"))}</div><div class="muted">Adicionales: ${safe(val("adicionales"))}</div></div>
         <div class="card span12"><div class="card-title">Timeline</div><div class="timeline-row">
           ${["iniciado","entregado"].map(k=>`<div class="timeline-step"><div class="label">${k}</div><div class="value">${formatDateTimeLocal(val("timeline_"+k))}</div></div>`).join("")}
         </div></div>

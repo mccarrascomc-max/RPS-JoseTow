@@ -116,20 +116,20 @@
   #reporteFinal .rps-meta{gap:7px;padding:9px;grid-template-columns:repeat(3,minmax(0,1fr))}
   #reporteFinal .grid{gap:8px;grid-template-columns:repeat(12,minmax(0,1fr))}
   #reporteFinal .card{border-radius:8px;padding:8px;overflow:hidden}
-  #reporteFinal .card-title{font-size:8.5px;line-height:1.08;margin-bottom:6px;letter-spacing:0;white-space:normal}
-  #reporteFinal .text-sm{font-size:9.5px;line-height:1.16;overflow-wrap:break-word}
-  #reporteFinal .muted,#reporteFinal .text-muted{font-size:8px;line-height:1.15;overflow-wrap:break-word}
+  #reporteFinal .card-title{font-size:9.5px;line-height:1.08;margin-bottom:6px;letter-spacing:0;white-space:normal}
+  #reporteFinal .text-sm{font-size:10.5px;line-height:1.2;overflow-wrap:break-word}
+  #reporteFinal .muted,#reporteFinal .text-muted{font-size:8.8px;line-height:1.18;overflow-wrap:break-word}
   #reporteFinal .vehicle-card{grid-template-columns:minmax(0,1fr) 94px;gap:8px}
   #reporteFinal .vehicle-thumb{width:94px;height:62px;border-radius:6px}
   #reporteFinal .timeline-row{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
   #reporteFinal .timeline-step{border-radius:7px;padding:6px 4px}
-  #reporteFinal .timeline-step .label{font-size:8.5px;line-height:1.05}
-  #reporteFinal .timeline-step .value{font-size:8px;line-height:1.05;margin-top:3px}
+  #reporteFinal .timeline-step .label{font-size:9.5px;line-height:1.05}
+  #reporteFinal .timeline-step .value{font-size:9px;line-height:1.05;margin-top:3px}
   #reporteFinal .photos{gap:8px}
   #reporteFinal .report-photo{height:58px;border-radius:6px}
   #reporteFinal .report-photo-label{font-size:8px;line-height:1;padding:3px}
   #reporteFinal .inventory-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px 10px}
-  #reporteFinal .inventory-item{font-size:9.5px;line-height:1.05;gap:5px}
+  #reporteFinal .inventory-item{font-size:10px;line-height:1.05;gap:5px}
   #reporteFinal .inventory-icon{width:14px;height:14px;font-size:8px}
   #reporteFinal .damage-area{grid-template-columns:1.2fr 1fr;gap:8px}
   #reporteFinal .damage-svg{height:96px}
@@ -137,21 +137,21 @@
   #reporteFinal .footer-note{font-size:8px;line-height:1.2;margin-top:8px;padding-top:6px}
   #reporteFinal .grid .card:nth-child(1),
   #reporteFinal .grid .card:nth-child(2),
-  #reporteFinal .grid .card:nth-child(3){min-height:104px}
+  #reporteFinal .grid .card:nth-child(3){min-height:82px}
   #reporteFinal .grid .card:nth-child(4),
-  #reporteFinal .grid .card:nth-child(5){min-height:76px}
-  #reporteFinal .grid .card:nth-child(6){min-height:76px}
+  #reporteFinal .grid .card:nth-child(5){min-height:60px}
+  #reporteFinal .grid .card:nth-child(6){min-height:58px}
   #reporteFinal .grid .card:nth-child(7),
-  #reporteFinal .grid .card:nth-child(8){min-height:166px}
-  #reporteFinal .grid .card:nth-child(9){min-height:74px}
-  #reporteFinal .grid .card:nth-child(10),
-  #reporteFinal .grid .card:nth-child(11){min-height:274px}
+  #reporteFinal .grid .card:nth-child(8){min-height:140px}
+  #reporteFinal .grid .card:nth-child(9){min-height:54px}
+  #reporteFinal .grid .card:nth-child(10){min-height:278px}
+  #reporteFinal .grid .card:nth-child(11),
   #reporteFinal .grid .card:nth-child(12),
-  #reporteFinal .grid .card:nth-child(13){min-height:112px}
-  #reporteFinal .report-photo{height:98px}
+  #reporteFinal .grid .card:nth-child(13){min-height:90px}
+  #reporteFinal .report-photo{height:84px}
   #reporteFinal .damage-area{display:block}
-  #reporteFinal .damage-svg{height:220px;display:block;margin:0 auto 4px}
-  #reporteFinal .damage-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:0;padding-left:18px}
+  #reporteFinal .damage-svg{height:250px;display:block;margin:0 auto 4px}
+  #reporteFinal .damage-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:0;padding-left:18px;font-size:10px}
   #reporteFinal .declaration-band{border-top:1px solid #dfe5ec;margin-top:8px;padding:6px 10px;color:#475569;font-size:8px;line-height:1.15;text-align:left}
   .pdf-mode #reporteFinal{box-shadow:none;transform:none!important}
   @media (max-width:700px){
@@ -412,10 +412,10 @@
         <div class="card span8"><div class="card-title">Evidencia en origen</div><div class="photos">${origen}</div></div>
         <div class="card span4"><div class="card-title">Evidencia en destino</div><div class="photos two">${destino}</div></div>
         <div class="card span12"><div class="card-title">Inventario accesorios</div><div class="inventory-grid">${inv}</div></div>
-        <div class="card span5"><div class="card-title">Observaciones</div><div class="text-sm">${safe(val("observaciones"),"Sin observaciones")}</div></div>
-        <div class="card span7"><div class="card-title">Danos visibles</div><div class="damage-area">${damageSvgForReport()}<ol class="damage-list">${damageItems}</ol></div></div>
-        <div class="card span6"><div class="card-title">Entrega origen</div><div class="text-sm"><b>Nombre:</b> ${safe(val("entrega_nombre"))}</div><div class="text-sm"><b>RUT:</b> ${safe(val("entrega_rut"))}</div><div class="text-sm"><b>Telefono:</b> ${safe(val("entrega_tel"))}</div></div>
-        <div class="card span6"><div class="card-title">Recepcion destino</div><div class="text-sm"><b>Nombre:</b> ${safe(val("recepcion_nombre"))}</div><div class="text-sm"><b>RUT:</b> ${safe(val("recepcion_rut"))}</div><div class="text-sm"><b>Telefono:</b> ${safe(val("recepcion_tel"))}</div></div>
+        <div class="card span12"><div class="card-title">Danos visibles</div><div class="damage-area">${damageSvgForReport()}<ol class="damage-list">${damageItems}</ol></div></div>
+        <div class="card span4"><div class="card-title">Observaciones</div><div class="text-sm">${safe(val("observaciones"),"Sin observaciones")}</div></div>
+        <div class="card span4"><div class="card-title">Entrega origen</div><div class="text-sm"><b>Nombre:</b> ${safe(val("entrega_nombre"))}</div><div class="text-sm"><b>RUT:</b> ${safe(val("entrega_rut"))}</div><div class="text-sm"><b>Telefono:</b> ${safe(val("entrega_tel"))}</div></div>
+        <div class="card span4"><div class="card-title">Recepcion destino</div><div class="text-sm"><b>Nombre:</b> ${safe(val("recepcion_nombre"))}</div><div class="text-sm"><b>RUT:</b> ${safe(val("recepcion_rut"))}</div><div class="text-sm"><b>Telefono:</b> ${safe(val("recepcion_tel"))}</div></div>
       </div>
       <div class="declaration-band"><b>Declaracion:</b> El presente reporte registra estado, traslado, inventario, evidencia fotografica y danos visibles informados durante la prestacion del servicio. Costo de plataforma: $0.</div>
       <div class="footer-note"><b>JOSETOW</b> - Servicio 24/7 · Transporte · Rescate · Asistencia en ruta</div>`;

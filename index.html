@@ -57,7 +57,7 @@
   .item-check{display:flex;align-items:center;justify-content:space-between;border-bottom:1px dotted var(--gris-borde);padding:6px 0;font-size:13px}
   .item-check input{width:20px;height:20px;accent-color:var(--verde)}
   .diagrama-wrap{border:1px solid var(--gris-borde);border-radius:8px;background:#fafbfc;padding:10px}
-  #diagramaAuto{width:100%;height:auto;cursor:crosshair;touch-action:manipulation}
+  #diagramaAuto{display:block;width:100%;height:auto;aspect-ratio:440/350;cursor:crosshair;touch-action:manipulation}
   .marca-dano{fill:var(--rojo);stroke:#fff;stroke-width:1.5;cursor:pointer}
   .marca-dano-num{font-size:9px;fill:#fff;font-weight:800;text-anchor:middle;pointer-events:none}
   .lista-danos{margin:10px 0 0;padding-left:20px;font-size:12px;color:#334155}
@@ -232,7 +232,7 @@
     </section>
     <section>
       <h2>Danos visibles</h2>
-      <div class="diagrama-wrap"><svg id="diagramaAuto" viewBox="0 0 420 420" role="img" aria-label="Diagrama de vehiculo"></svg></div>
+      <div class="diagrama-wrap"><svg id="diagramaAuto" viewBox="0 0 440 350" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Diagrama de vehiculo: vista lateral, frontal, superior y posterior"></svg></div>
       <p style="font-size:11px;color:#777;margin:8px 0 0;">Toca el diagrama para marcar un dano. Doble clic sobre el diagrama para quitar la ultima marca.</p>
       <ol id="listaDanos" class="lista-danos"></ol>
     </section>
@@ -298,9 +298,9 @@
     reader.readAsDataURL(file);
   }
 
-  // Diagrama de danos: silueta vectorial pulida del vehiculo (vista superior).
-  // Vector (no foto): escala nitido en cualquier tamano, pesa casi nada y no
-  // depende de un modelo de auto especifico que no coincida con el vehiculo real.
+  // Diagrama de danos: 4 vistas tecnicas del vehiculo (lateral, frontal, superior,
+  // posterior), al estilo de una hoja de inspeccion de taller. Vector (no foto):
+  // se ve nitido en cualquier tamano/PDF y no depende de un modelo de auto real.
   function carSvgContent(){
     return `
       <defs>
@@ -314,56 +314,80 @@
           <stop offset="100%" stop-color="#1a3a5c"/>
         </linearGradient>
       </defs>
-      <rect x="0" y="0" width="420" height="420" fill="#ffffff"/>
-      <text x="210" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b" letter-spacing="1">FRENTE</text>
-      <text x="210" y="407" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b" letter-spacing="1">ATRAS</text>
-      <text x="34" y="215" text-anchor="middle" font-size="11" fill="#94a3b8" letter-spacing=".5">IZQ.</text>
-      <text x="386" y="215" text-anchor="middle" font-size="11" fill="#94a3b8" letter-spacing=".5">DER.</text>
+      <rect x="0" y="0" width="440" height="350" fill="#ffffff"/>
 
-      <ellipse cx="210" cy="386" rx="150" ry="12" fill="#0f2740" opacity=".08"/>
+      <!-- Divisores de cuadricula -->
+      <line x1="310" y1="8" x2="310" y2="345" stroke="#cbd5e1" stroke-width="1"/>
+      <line x1="8" y1="178" x2="432" y2="178" stroke="#cbd5e1" stroke-width="1"/>
 
-      <!-- Ruedas (detras de la carroceria) -->
-      <rect x="93" y="78" width="27" height="72" rx="9" fill="#1a3a5c"/>
-      <rect x="100" y="88" width="13" height="52" rx="5" fill="#3c5876"/>
-      <rect x="93" y="268" width="27" height="72" rx="9" fill="#1a3a5c"/>
-      <rect x="100" y="278" width="13" height="52" rx="5" fill="#3c5876"/>
-      <rect x="300" y="78" width="27" height="72" rx="9" fill="#1a3a5c"/>
-      <rect x="307" y="88" width="13" height="52" rx="5" fill="#3c5876"/>
-      <rect x="300" y="268" width="27" height="72" rx="9" fill="#1a3a5c"/>
-      <rect x="307" y="278" width="13" height="52" rx="5" fill="#3c5876"/>
+      <!-- Titulos de cada vista -->
+      <text x="160" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".5">VISTA LATERAL</text>
+      <text x="375" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".5">FRONTAL</text>
+      <text x="160" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".5">VISTA SUPERIOR</text>
+      <text x="375" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".5">POSTERIOR</text>
 
-      <!-- Carroceria -->
-      <path d="M210,24 C263,24 300,52 300,96 L300,322 C300,368 263,396 210,396
-               C157,396 120,368 120,322 L120,96 C120,52 157,24 210,24 Z"
-            fill="url(#carBodyGrad)" stroke="#1a3a5c" stroke-width="2.6"/>
+      <!-- ===== VISTA LATERAL ===== -->
+      <g transform="translate(15,24)">
+        <ellipse cx="150" cy="118" rx="140" ry="8" fill="#0f2740" opacity=".07"/>
+        <path d="M15,110 C15,90 30,80 50,78 L75,78 C85,48 108,28 140,25 L190,25
+                 C222,28 245,48 255,75 L275,78 C285,80 285,90 285,100 L285,110 Z"
+              fill="url(#carBodyGrad)" stroke="#1a3a5c" stroke-width="2.4"/>
+        <path d="M85,76 C95,50 115,34 145,32 L185,32 C210,34 232,50 245,74 Z"
+              fill="url(#carGlassGrad)" opacity=".18" stroke="#1a3a5c" stroke-width="1.2"/>
+        <line x1="165" y1="76" x2="165" y2="110" stroke="#1a3a5c" stroke-width="1" opacity=".45"/>
+        <rect x="150" y="90" width="10" height="4" rx="2" fill="#1a3a5c" opacity=".5"/>
+        <path d="M92,55 L82,60 L92,65 Z" fill="#1a3a5c"/>
+        <circle cx="55" cy="112" r="20" fill="#1a3a5c"/>
+        <circle cx="55" cy="112" r="9" fill="#5a7594"/>
+        <circle cx="245" cy="112" r="20" fill="#1a3a5c"/>
+        <circle cx="245" cy="112" r="9" fill="#5a7594"/>
+      </g>
 
-      <!-- Techo / parabrisas -->
-      <rect x="151" y="98" width="118" height="204" rx="26" fill="url(#carGlassGrad)" opacity=".16" stroke="#1a3a5c" stroke-width="1.4"/>
-      <line x1="210" y1="98" x2="210" y2="302" stroke="#1a3a5c" stroke-width="1" opacity=".5"/>
+      <!-- ===== VISTA FRONTAL ===== -->
+      <g transform="translate(325,20)">
+        <path d="M15,150 L15,55 C15,20 35,8 50,8 C65,8 85,20 85,55 L85,150 Z"
+              fill="url(#carBodyGrad)" stroke="#1a3a5c" stroke-width="2.2"/>
+        <path d="M28,32 L72,32 L66,10 L34,10 Z" fill="url(#carGlassGrad)" opacity=".18" stroke="#1a3a5c" stroke-width="1"/>
+        <rect x="18" y="60" width="16" height="11" rx="4" fill="#fef3c7" stroke="#1a3a5c" stroke-width="1"/>
+        <rect x="66" y="60" width="16" height="11" rx="4" fill="#fef3c7" stroke="#1a3a5c" stroke-width="1"/>
+        <rect x="36" y="70" width="28" height="18" rx="4" fill="#1a3a5c" opacity=".18"/>
+        <line x1="10" y1="118" x2="90" y2="118" stroke="#1a3a5c" stroke-width="1" opacity=".4"/>
+        <rect x="2" y="120" width="14" height="28" rx="5" fill="#1a3a5c"/>
+        <rect x="84" y="120" width="14" height="28" rx="5" fill="#1a3a5c"/>
+        <rect x="4" y="48" width="8" height="14" rx="3" fill="#1a3a5c"/>
+        <rect x="88" y="48" width="8" height="14" rx="3" fill="#1a3a5c"/>
+      </g>
 
-      <!-- Lineas de capo / maletero -->
-      <path d="M151,98 C165,72 185,52 210,50" fill="none" stroke="#1a3a5c" stroke-width="1" opacity=".45"/>
-      <path d="M269,98 C255,72 235,52 210,50" fill="none" stroke="#1a3a5c" stroke-width="1" opacity=".45"/>
-      <path d="M151,302 C165,328 185,348 210,350" fill="none" stroke="#1a3a5c" stroke-width="1" opacity=".45"/>
-      <path d="M269,302 C255,328 235,348 210,350" fill="none" stroke="#1a3a5c" stroke-width="1" opacity=".45"/>
+      <!-- ===== VISTA SUPERIOR ===== -->
+      <g transform="translate(15,194)">
+        <rect x="10" y="15" width="270" height="110" rx="45" fill="url(#carBodyGrad)" stroke="#1a3a5c" stroke-width="2.2"/>
+        <rect x="95" y="15" width="110" height="110" rx="18" fill="url(#carGlassGrad)" opacity=".16" stroke="#1a3a5c" stroke-width="1"/>
+        <line x1="95" y1="70" x2="205" y2="70" stroke="#1a3a5c" stroke-width="1" opacity=".4"/>
+        <rect x="45" y="3" width="18" height="14" rx="5" fill="#1a3a5c"/>
+        <rect x="45" y="123" width="18" height="14" rx="5" fill="#1a3a5c"/>
+        <rect x="227" y="3" width="18" height="14" rx="5" fill="#1a3a5c"/>
+        <rect x="227" y="123" width="18" height="14" rx="5" fill="#1a3a5c"/>
+        <path d="M88,8 L78,4 L78,14 Z" fill="#1a3a5c"/>
+        <path d="M88,132 L78,128 L78,138 Z" fill="#1a3a5c"/>
+      </g>
 
-      <!-- Manillas de puerta -->
-      <rect x="126" y="150" width="10" height="4" rx="2" fill="#1a3a5c" opacity=".55"/>
-      <rect x="126" y="250" width="10" height="4" rx="2" fill="#1a3a5c" opacity=".55"/>
-      <rect x="284" y="150" width="10" height="4" rx="2" fill="#1a3a5c" opacity=".55"/>
-      <rect x="284" y="250" width="10" height="4" rx="2" fill="#1a3a5c" opacity=".55"/>
-
-      <!-- Espejos -->
-      <path d="M114,120 L100,126 C97,127 97,133 100,134 L114,140 Z" fill="#1a3a5c"/>
-      <path d="M306,120 L320,126 C323,127 323,133 320,134 L306,140 Z" fill="#1a3a5c"/>
-
-      <!-- Brillo sutil de carroceria -->
-      <path d="M140,70 C132,140 132,280 140,350" fill="none" stroke="#ffffff" stroke-width="6" opacity=".35" stroke-linecap="round"/>
+      <!-- ===== VISTA POSTERIOR ===== -->
+      <g transform="translate(325,190)">
+        <path d="M15,150 L15,55 C15,20 35,8 50,8 C65,8 85,20 85,55 L85,150 Z"
+              fill="url(#carBodyGrad)" stroke="#1a3a5c" stroke-width="2.2"/>
+        <path d="M26,34 L74,34 L68,10 L32,10 Z" fill="url(#carGlassGrad)" opacity=".18" stroke="#1a3a5c" stroke-width="1"/>
+        <rect x="14" y="58" width="14" height="14" rx="4" fill="#c0392b" opacity=".85"/>
+        <rect x="72" y="58" width="14" height="14" rx="4" fill="#c0392b" opacity=".85"/>
+        <rect x="34" y="96" width="32" height="14" rx="2" fill="#ffffff" stroke="#1a3a5c" stroke-width="1"/>
+        <line x1="10" y1="118" x2="90" y2="118" stroke="#1a3a5c" stroke-width="1" opacity=".4"/>
+        <rect x="2" y="120" width="14" height="28" rx="5" fill="#1a3a5c"/>
+        <rect x="84" y="120" width="14" height="28" rx="5" fill="#1a3a5c"/>
+      </g>
     `;
   }
   function drawInteractiveCar(){
     const svg=$("diagramaAuto");
-    svg.setAttribute("viewBox","0 0 420 420");
+    svg.setAttribute("viewBox","0 0 440 350");
     svg.innerHTML=carSvgContent();
     danos.forEach((d,i)=>addDamageMarker(svg,d.x,d.y,i+1));
   }
@@ -395,7 +419,7 @@
   });
   function damageSvgForReport(){
     const markers=danos.map((d,i)=>`<g data-damage-marker="${i+1}"><circle cx="${d.x}" cy="${d.y}" r="11" class="marca-dano"></circle><text x="${d.x}" y="${Number(d.y)+3}" class="marca-dano-num">${i+1}</text></g>`).join("");
-    return `<svg class="damage-svg" viewBox="0 0 420 420" role="img" aria-label="Danos visibles">${carSvgContent()}${markers}</svg>`;
+    return `<svg class="damage-svg" viewBox="0 0 440 350" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Danos visibles">${carSvgContent()}${markers}</svg>`;
   }
   function photoCard(id,label){
     const src=fotos[id];

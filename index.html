@@ -72,19 +72,19 @@
   #reporteFinal{
     width:816px;height:1056px;min-height:1056px;overflow:hidden;flex:0 0 816px;max-width:none;
     background:#fff;color:#111827;box-shadow:0 8px 22px rgba(15,23,42,.15);
-    padding:24px;transform-origin:top center;letter-spacing:0;
+    padding:20px;transform-origin:top center;letter-spacing:0;
   }
   #reporteFinal *{letter-spacing:0;word-break:normal;overflow-wrap:normal}
-  #reporteFinal .report-header{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:12px}
-  #reporteFinal .brand-box{display:flex;gap:12px;align-items:center;border-bottom:2px solid var(--azul);padding-bottom:10px}
+  #reporteFinal .report-header{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-bottom:9px}
+  #reporteFinal .brand-box{display:flex;gap:12px;align-items:center;border-bottom:2px solid var(--azul);padding-bottom:8px}
   #reporteFinal .brand-mark{width:48px;height:48px;border-radius:8px;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900;flex-shrink:0}
   #reporteFinal .brand-title{font-size:24px;font-weight:900;color:var(--azul-osc);line-height:1}
   #reporteFinal .brand-sub{font-size:10px;color:var(--rojo);font-weight:800;letter-spacing:.03em;margin-top:4px;line-height:1.15}
   #reporteFinal .rps-card{border:1px solid #cbd5e1;border-radius:8px;overflow:hidden}
   #reporteFinal .rps-card-title{background:var(--azul-osc);color:#fff;font-size:10px;text-align:center;font-weight:900;padding:7px 8px;letter-spacing:.04em;line-height:1.1}
   #reporteFinal .rps-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:9px}
-  #reporteFinal .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px}
-  #reporteFinal .card{border:1px solid #dfe5ec;border-radius:8px;background:#fff;padding:8px;min-height:0;overflow:hidden}
+  #reporteFinal .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:7px}
+  #reporteFinal .card{border:1px solid #dfe5ec;border-radius:8px;background:#fff;padding:7px;min-height:0;overflow:hidden}
   #reporteFinal .span2{grid-column:span 2}
   #reporteFinal .span3{grid-column:span 3}
   #reporteFinal .span4{grid-column:span 4}
@@ -102,19 +102,19 @@
   #reporteFinal .timeline-step .value{font-size:9px;margin-top:3px;color:#111827;line-height:1.05}
   #reporteFinal .photos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   #reporteFinal .photos.two{grid-template-columns:repeat(2,1fr)}
-  #reporteFinal .report-photo{position:relative;height:84px;background:#eef2f6;border-radius:6px;overflow:hidden;border:1px solid #dfe5ec}
+  #reporteFinal .report-photo{position:relative;height:80px;background:#eef2f6;border-radius:6px;overflow:hidden;border:1px solid #dfe5ec}
   #reporteFinal .report-photo img{width:100%;height:100%;object-fit:cover;display:block}
   #reporteFinal .report-photo-label{position:absolute;left:0;right:0;bottom:0;background:rgba(15,39,64,.78);color:#fff;text-align:center;font-size:8px;font-weight:900;padding:3px;line-height:1}
   #reporteFinal .inventory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 10px}
   #reporteFinal .inventory-item{display:flex;gap:5px;align-items:center;font-size:10px;line-height:1.05;min-width:0}
-  #reporteFinal .inventory-icon{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;flex:0 0 auto}
+  #reporteFinal .inventory-icon{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
   #reporteFinal .inventory-icon.checked{background:var(--verde);color:#fff}
+  #reporteFinal .inventory-icon.checked::after{content:"";width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin-top:-2px}
   #reporteFinal .inventory-icon.unchecked{border:1px solid #cbd5e1;color:#64748b}
-  #reporteFinal .damage-area{display:block}
-  #reporteFinal .damage-svg{width:100%;height:292px;display:block;margin:0 auto 5px}
-  #reporteFinal .damage-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:0;padding-left:18px;font-size:9px;line-height:1.15}
-  #reporteFinal .footer-note{font-size:8px;color:#475569;line-height:1.2;text-align:center;border-top:1px solid #dfe5ec;margin-top:8px;padding-top:6px}
-  #reporteFinal .declaration-band{border-top:1px solid #dfe5ec;margin-top:8px;padding:6px 10px;color:#475569;font-size:8px;line-height:1.15;text-align:left}
+  #reporteFinal .damage-area{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:10px;align-items:center;height:265px}
+  #reporteFinal .damage-svg{width:100%;height:258px;display:block;margin:0 auto}
+  #reporteFinal .damage-list{margin:0;padding-left:16px;font-size:9.2px;line-height:1.25;align-self:start;max-height:252px;overflow:hidden}
+  #reporteFinal .declaration-band{border-top:1px solid #dfe5ec;margin-top:7px;padding:6px 8px;color:#475569;font-size:8px;line-height:1.15;text-align:left}
   .pdf-mode #reporteFinal{box-shadow:none;transform:none!important}
   @media (max-width:700px){
     .grid2,.grid3,.timeline,.inventario{grid-template-columns:1fr}
@@ -350,7 +350,7 @@
     const destino=fotoIds.slice(4).map(([id,label])=>photoCard(id,label)).join("");
     const inv=inventario.map(([id,label])=>{
       const ok=$(id).checked;
-      return `<div class="inventory-item"><span class="inventory-icon ${ok?"checked":"unchecked"}">${ok?"check":"-"}</span><span>${escapeHTML(label)}</span></div>`;
+      return `<div class="inventory-item"><span class="inventory-icon ${ok?"checked":"unchecked"}"></span><span>${escapeHTML(label)}</span></div>`;
     }).join("");
     const damageItems=danos.length?danos.map(d=>`<li>${safe(d.desc,"Dano visible")}</li>`).join(""):`<li>Sin danos informados</li>`;
     $("reporteFinal").innerHTML=`
@@ -382,8 +382,7 @@
         <div class="card span4"><div class="card-title">Entrega origen</div><div class="text-sm"><b>Nombre:</b> ${safe(val("entrega_nombre"))}</div><div class="text-sm"><b>RUT:</b> ${safe(val("entrega_rut"))}</div><div class="text-sm"><b>Telefono:</b> ${safe(val("entrega_tel"))}</div></div>
         <div class="card span4"><div class="card-title">Recepcion destino</div><div class="text-sm"><b>Nombre:</b> ${safe(val("recepcion_nombre"))}</div><div class="text-sm"><b>RUT:</b> ${safe(val("recepcion_rut"))}</div><div class="text-sm"><b>Telefono:</b> ${safe(val("recepcion_tel"))}</div></div>
       </div>
-      <div class="declaration-band"><b>Declaracion:</b> El presente reporte registra estado, traslado, inventario, evidencia fotografica y danos visibles informados durante la prestacion del servicio.</div>
-      <div class="footer-note"><b>JOSETOW</b> - Servicio 24/7 · Transporte · Rescate · Asistencia en ruta</div>`;
+      <div class="declaration-band"><b>Declaracion:</b> Reporte de estado, traslado, inventario, evidencia fotografica y danos visibles informados. Costo plataforma: $0. <b>JOSETOW</b> - Servicio 24/7 - Transporte - Rescate - Asistencia en ruta.</div>`;
   }
 
   // Escala unica de la vista previa (se resetea antes de medir, para no combinarse
@@ -420,7 +419,7 @@
     try{
       if(typeof html2canvas!=="function") throw new Error("No se cargo html2canvas. Revisa la conexion a internet y recarga la pagina.");
       if(!window.jspdf || !window.jspdf.jsPDF) throw new Error("No se cargo jsPDF. Revisa la conexion a internet y recarga la pagina.");
-      const canvas=await html2canvas(reporte,{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0,windowWidth:reporte.scrollWidth,windowHeight:reporte.scrollHeight});
+      const canvas=await html2canvas(reporte,{scale:3,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0,windowWidth:reporte.scrollWidth,windowHeight:reporte.scrollHeight});
       const imgData=canvas.toDataURL("image/jpeg",0.98);
       const pdf=new window.jspdf.jsPDF({orientation:"portrait",unit:"mm",format:"letter",compress:true});
       pdf.addImage(imgData,"JPEG",0,0,215.9,279.4,undefined,"FAST");
